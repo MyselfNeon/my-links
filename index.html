@@ -51,6 +51,7 @@ body {
 h1 { margin:10px 0; font-size:22px; }
 p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 
+/* Buttons reverted to simple style */
 .btn {
   display:flex;
   align-items:center;
@@ -62,33 +63,13 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
   font-weight:700;
   font-size:15px;
   border-radius: 12px;
-  border: 3px solid transparent;
+  border: 2px solid rgba(255,255,255,0.15);
   position: relative;
   overflow: hidden;
   z-index: 0;
   box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+  transition: transform .18s ease, box-shadow .18s ease;
 }
-.btn::before {
-  content:'';
-  position:absolute;
-  inset:0;
-  padding:3px;
-  border-radius:12px;
-  background:linear-gradient(90deg,#ff4d6d,#38bdf8,#facc15,#d946ef);
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: destination-out;
-  mask-composite: exclude;
-  z-index:-1;
-  animation: borderShift 5s linear infinite;
-}
-@keyframes borderShift{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
-
 .btn i { font-size:19px; margin-top:2px; }
 .btn:hover { transform: translateY(-3px); }
 
@@ -118,25 +99,32 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 }
 @keyframes ripple-wave { to { transform: scale(1.8); opacity:0; } }
 
-/* Heart with multi-wave pulse */
-.heart-wave {
+/* Heart pulse (center with repel effect) */
+.heart {
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 90px;
+  width: 90px; 
   height: 90px;
   background: rgba(200,0,0,0.4);
   border-radius: 50%;
-  transform: translate(-50%,-50%) scale(0);
+  transform: translate(-50%, -50%) scale(0);
   opacity: 0;
   pointer-events: none;
-  z-index:2;
+  z-index: 2;
+  animation: wavePulse 1.2s ease-out forwards;
+}
+@keyframes wavePulse {
+  0% { transform: translate(-50%,-50%) scale(0.3); opacity: 0.5; }
+  50% { transform: translate(-50%,-50%) scale(1.2); opacity: 0.3; }
+  100% { transform: translate(-50%,-50%) scale(1.5); opacity: 0; }
 }
 </style>
 </head>
 <body>
 <canvas id="particles"></canvas>
 <div id="ripple-layer"></div>
+<div class="heart"></div>
 
 <div class="container">
 <img class="avatar" src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Neon avatar">
@@ -152,22 +140,12 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 </div>
 
 <script>
-// Multi-wave heart pulse
-function createHeartWave() {
-  const wave = document.createElement("div");
-  wave.classList.add("heart-wave");
-  document.body.appendChild(wave);
-  wave.animate([
-    { transform: "translate(-50%,-50%) scale(0.3)", opacity: 0.5 },
-    { transform: "translate(-50%,-50%) scale(1.2)", opacity: 0.3 },
-    { transform: "translate(-50%,-50%) scale(1.6)", opacity: 0 }
-  ], {
-    duration: 1200,
-    easing: "ease-out"
-  });
-  setTimeout(()=>wave.remove(), 1200);
+// Heart pulse every 10 seconds (wave/repel)
+const heart = document.querySelector(".heart");
+function pulseHeart() {
+  heart.style.animation = "wavePulse 1.2s ease-out forwards";
 }
-setInterval(createHeartWave, 10000);
+setInterval(pulseHeart, 10000);
 
 // Button ripple
 document.querySelectorAll(".btn").forEach(btn=>{
@@ -207,7 +185,7 @@ document.addEventListener("click", e=>{
   }
 });
 
-// Particles + stars (same as before)
+// Particles + sparkling stars
 const canvas=document.getElementById("particles");
 const ctx=canvas.getContext("2d");
 let particles=[],stars=[],twinkles=[];
@@ -231,16 +209,22 @@ spawnStar();
 
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // background particles
   particles.forEach(p=>{
     ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle="rgba(255,255,255,0.7)"; ctx.fill();
     p.x+=p.dx; p.y+=p.dy;
     if(p.x<0||p.x>canvas.width)p.dx*=-1;
     if(p.y<0||p.y>canvas.height)p.dy*=-1;
   });
+
+  // twinkles
   twinkles.forEach(t=>{
     ctx.beginPath(); ctx.arc(t.x,t.y,t.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${t.alpha})`; ctx.fill();
     t.alpha+=t.da; if(t.alpha>1||t.alpha<0)t.da*=-1;
   });
+
+  // shooting stars
   stars.forEach((s,i)=>{
     s.trail.unshift({x:s.x,y:s.y,life:1});
     if(s.trail.length>25)s.trail.pop();
@@ -253,6 +237,7 @@ function animate(){
     s.x+=s.dx; s.y+=s.dy;
     if(s.x<-100||s.x>canvas.width+100||s.y>canvas.height+100){stars.splice(i,1);}
   });
+
   requestAnimationFrame(animate);
 }
 animate();
