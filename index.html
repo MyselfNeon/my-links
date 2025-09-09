@@ -1,331 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Neon's Links</title>
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon's Links</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+body {
+  margin:0;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:#f8fafc;
+  display:flex;
+  justify-content:center;
+  padding:60px 16px;
+  min-height:100vh;
+  overflow:hidden;
+  position:relative;
+}
 
-  <style>
-    :root {
-      --btn-width: 85%;
-      --btn-height: 56px;
-      --btn-radius: 12px;
-      --container-max: 420px;
-      --gap: 12px;
-    }
+#particles, #ripple-layer {
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  pointer-events:none;
+  z-index:0;
+}
+#ripple-layer { z-index:1; }
 
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg,#0f172a,#1e293b);
-      color: #f8fafc;
-      display:flex;
-      align-items:flex-start;
-      justify-content:center;
-      padding:60px 16px;
-      min-height:100vh;
-      overflow:hidden;
-      position: relative;
-    }
+.container {
+  width:100%;
+  max-width:420px;
+  text-align:center;
+  position: relative;
+  z-index:3;
+  margin-top: 28px;
+}
 
-    #particles {
-      position: fixed;
-      top:0; left:0;
-      width:100%; height:100%;
-      pointer-events: none;
-      z-index: 0;
-    }
+.avatar {
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  margin:0 auto 22px;
+  border:4px solid #38bdf8;
+  box-shadow:0 6px 22px rgba(56,189,248,0.18);
+  object-fit:cover;
+  display:block;
+}
 
-    #ripple-layer {
-      position: fixed;
-      top:0; left:0;
-      width:100%; height:100%;
-      pointer-events:none;
-      z-index: 1;
-    }
+h1 { margin:10px 0; font-size:22px; }
+p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 
-    .container {
-      width:100%;
-      max-width: var(--container-max);
-      text-align:center;
-      position: relative;
-      z-index: 3;
-      margin-top: 28px;
-    }
+.btn {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  height: 56px;
+  text-decoration:none;
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+  border-radius: 12px;
+  border: 3px solid transparent;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+}
+.btn::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  padding:3px;
+  border-radius:12px;
+  background:linear-gradient(90deg,#ff4d6d,#38bdf8,#facc15,#d946ef);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  z-index:-1;
+  animation: borderShift 5s linear infinite;
+}
+@keyframes borderShift{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
 
-    .avatar {
-      width:120px;
-      height:120px;
-      border-radius:50%;
-      margin:0 auto 22px;
-      border:4px solid #38bdf8;
-      box-shadow:0 6px 22px rgba(56,189,248,0.18);
-      object-fit:cover;
-      display:block;
-    }
+.btn i { font-size:19px; margin-top:2px; }
+.btn:hover { transform: translateY(-3px); }
 
-    h1 { margin:10px 0; font-size:22px; }
-    p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
+.btn.full { width: 85%; margin: 14px auto; }
+.row { width: 85%; margin: 14px auto; display:flex; gap:12px; }
+.row .btn { flex:1; min-width:0; }
 
-    .btn {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      height: var(--btn-height);
-      text-decoration:none;
-      color:#fff;
-      font-weight:700;
-      font-size:15px;
-      border-radius: var(--btn-radius);
-      border: 2px solid rgba(255,255,255,0.15);
-      box-shadow: 0 6px 18px rgba(2,6,23,0.45);
-      transition: transform .18s ease, box-shadow .18s ease;
-      overflow: hidden;
-      position: relative;
-    }
-    .btn i { font-size:19px; margin-top:2px; }
-    .btn:hover { transform: translateY(-3px); }
+/* Ripple effects */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  pointer-events: none;
+  animation: ripple-wave 2s ease-out forwards;
+}
+.ripple.outline {
+  border: 3px solid currentColor;
+  opacity: 0.9;
+  transform: scale(0.3);
+}
+.ripple.neon {
+  background: rgba(255,255,255,0.15);
+  box-shadow: 0 0 18px rgba(0,200,255,0.8), 0 0 35px rgba(150,0,255,0.6);
+  opacity: 0.7;
+  transform: scale(0.2);
+}
+@keyframes ripple-wave { to { transform: scale(1.8); opacity:0; } }
 
-    .btn.full { width: var(--btn-width); margin: 14px auto; }
-    .row { width: var(--btn-width); margin: 14px auto; display:flex; gap: var(--gap); }
-    .row .btn { flex: 1; min-width:0; }
-
-    /* Gradients */
-    @keyframes gradientShift { 
-      0%{background-position:0% 50%} 
-      50%{background-position:100% 50%} 
-      100%{background-position:0% 50%}
-    }
-    .telegram { background:linear-gradient(90deg,#2ea8f5,#0077b6,#005f99);background-size:200% 200%;animation:gradientShift 6s infinite;}
-    .github { background:linear-gradient(90deg,#42464d,#22272b,#0b0b0b);background-size:200% 200%;animation:gradientShift 8s infinite;}
-    .instagram { background:linear-gradient(45deg,#feda75,#d62976,#962fbf,#4f5bd5);background-size:200% 200%;animation:gradientShift 5s infinite;}
-    .facebook { background:linear-gradient(90deg,#2d6df6,#1877f2,#1357d9);background-size:200% 200%;animation:gradientShift 6s infinite;}
-
-    /* Ripple effects */
-    .ripple {
-      position: absolute;
-      border-radius: 50%;
-      width: 120px;
-      height: 120px;
-      pointer-events: none;
-      animation: ripple-wave 2s ease-out forwards;
-    }
-
-    .ripple.outline {
-      border: 3px solid currentColor;
-      opacity: 0.9;
-      transform: scale(0.3);
-    }
-
-    .ripple.neon {
-      background: rgba(255,255,255,0.15);
-      box-shadow: 0 0 18px rgba(0,200,255,0.8), 0 0 35px rgba(150,0,255,0.6);
-      opacity: 0.7;
-      transform: scale(0.2);
-    }
-
-    @keyframes ripple-wave {
-      to { transform: scale(1.8); opacity: 0; }
-    }
-
-    /* Heartbeat pulse every 10s */
-    .heart {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 60px; height: 60px;
-      transform: translate(-50%,-50%) rotate(-45deg) scale(0.3);
-      background: radial-gradient(circle at 30% 30%, #9b2c2c, #661919);
-      opacity: 0;
-      z-index: 2;
-    }
-    .heart::before,
-    .heart::after {
-      content:"";
-      position:absolute;
-      width:60px; height:60px;
-      border-radius:50%;
-      background: inherit;
-    }
-    .heart::before { top:-30px; left:0; }
-    .heart::after { left:30px; top:0; }
-  </style>
+/* Heart with multi-wave pulse */
+.heart-wave {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 90px;
+  height: 90px;
+  background: rgba(200,0,0,0.4);
+  border-radius: 50%;
+  transform: translate(-50%,-50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  z-index:2;
+}
+</style>
 </head>
 <body>
-  <canvas id="particles"></canvas>
-  <div id="ripple-layer"></div>
-  <div class="heart"></div>
+<canvas id="particles"></canvas>
+<div id="ripple-layer"></div>
 
-  <div class="container">
-    <img class="avatar" src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Neon avatar">
-    <h1>MyselfNeon</h1>
-    <p class="lead">🚀 Dev | 📚 Student | 💡 Exploring Tech</p>
+<div class="container">
+<img class="avatar" src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Neon avatar">
+<h1>MyselfNeon</h1>
+<p class="lead">🚀 Dev | 📚 Student | 💡 Exploring Tech</p>
 
-    <a class="btn telegram full" href="https://t.me/MyselfNeon" target="_blank">
-      <i class="fab fa-telegram-plane"></i><span>Telegram</span>
-    </a>
+<a class="btn telegram full" href="https://t.me/MyselfNeon" target="_blank"><i class="fab fa-telegram-plane"></i>Telegram</a>
+<a class="btn github full" href="https://github.com/MyselfNeon" target="_blank"><i class="fab fa-github"></i>GitHub</a>
+<div class="row">
+  <a class="btn instagram" href="https://instagram.com/" target="_blank"><i class="fab fa-instagram"></i>Instagram</a>
+  <a class="btn facebook" href="https://facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i>Facebook</a>
+</div>
+</div>
 
-    <a class="btn github full" href="https://github.com/MyselfNeon" target="_blank">
-      <i class="fab fa-github"></i><span>GitHub</span>
-    </a>
+<script>
+// Multi-wave heart pulse
+function createHeartWave() {
+  const wave = document.createElement("div");
+  wave.classList.add("heart-wave");
+  document.body.appendChild(wave);
+  wave.animate([
+    { transform: "translate(-50%,-50%) scale(0.3)", opacity: 0.5 },
+    { transform: "translate(-50%,-50%) scale(1.2)", opacity: 0.3 },
+    { transform: "translate(-50%,-50%) scale(1.6)", opacity: 0 }
+  ], {
+    duration: 1200,
+    easing: "ease-out"
+  });
+  setTimeout(()=>wave.remove(), 1200);
+}
+setInterval(createHeartWave, 10000);
 
-    <div class="row">
-      <a class="btn instagram" href="https://instagram.com/" target="_blank">
-        <i class="fab fa-instagram"></i><span>Instagram</span>
-      </a>
-      <a class="btn facebook" href="https://facebook.com/" target="_blank">
-        <i class="fab fa-facebook-f"></i><span>Facebook</span>
-      </a>
-    </div>
-  </div>
-
-  <script>
-    const heart = document.querySelector(".heart");
-
-    // Heart pulse every 10s
-    setInterval(()=>{
-      heart.style.opacity=1;
-      heart.style.transform="translate(-50%,-50%) rotate(-45deg) scale(1.2)";
+// Button ripple
+document.querySelectorAll(".btn").forEach(btn=>{
+  btn.addEventListener("click", e=>{
+    e.preventDefault();
+    const rect=btn.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const y=e.clientY-rect.top;
+    for(let i=0;i<3;i++){
       setTimeout(()=>{
-        heart.style.transform="translate(-50%,-50%) rotate(-45deg) scale(0.3)";
-        heart.style.opacity=0;
-      },1000);
-    },10000);
+        const ripple=document.createElement("span");
+        ripple.classList.add("ripple","outline");
+        ripple.style.left=(rect.left+x-60)+"px";
+        ripple.style.top=(rect.top+y-60)+"px";
+        ripple.style.color=getComputedStyle(btn).color;
+        document.body.appendChild(ripple);
+        ripple.addEventListener("animationend",()=>ripple.remove());
+      },i*250);
+    }
+    setTimeout(()=>window.open(btn.href,"_blank"),600);
+  });
+});
 
-    /* Button ripple */
-    document.querySelectorAll(".btn").forEach(btn=>{
-      btn.addEventListener("click", function(e){
-        e.preventDefault();
-        const rect = this.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+// Background ripple
+document.addEventListener("click", e=>{
+  if(!e.target.closest(".btn")){
+    for(let i=0;i<2;i++){
+      setTimeout(()=>{
+        const ripple=document.createElement("span");
+        ripple.classList.add("ripple","neon");
+        ripple.style.left=(e.pageX-60)+"px";
+        ripple.style.top=(e.pageY-60)+"px";
+        document.getElementById("ripple-layer").appendChild(ripple);
+        ripple.addEventListener("animationend",()=>ripple.remove());
+      },i*300);
+    }
+  }
+});
 
-        for(let i=0;i<3;i++){
-          setTimeout(()=>{
-            const ripple = document.createElement("span");
-            ripple.classList.add("ripple","outline");
-            ripple.style.left=(rect.left + x - 60)+"px";
-            ripple.style.top=(rect.top + y - 60)+"px";
-            ripple.style.color = window.getComputedStyle(this).color;
-            document.body.appendChild(ripple);
-            ripple.addEventListener("animationend",()=>ripple.remove());
-          }, i*250);
-        }
+// Particles + stars (same as before)
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+let particles=[],stars=[],twinkles=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+window.addEventListener("resize",resizeCanvas);
+resizeCanvas();
 
-        setTimeout(()=>window.open(this.href,"_blank"),600);
-      });
+// Floating particles
+for(let i=0;i<30;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.3,dy:(Math.random()-0.5)*0.3});}
+
+// Twinkling stars
+for(let i=0;i<60;i++){twinkles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,alpha:Math.random(),da:(Math.random()*0.02)+0.005});}
+
+// Shooting stars
+function spawnStar(){
+  const side=Math.random()>0.5?"left":"right";
+  stars.push({x:side==="left"?-10:canvas.width+10,y:Math.random()*canvas.height*0.3,dx:1.5,dy:1.2,trail:[]});
+  setTimeout(spawnStar, Math.random()*3000+2000);
+}
+spawnStar();
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle="rgba(255,255,255,0.7)"; ctx.fill();
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>canvas.width)p.dx*=-1;
+    if(p.y<0||p.y>canvas.height)p.dy*=-1;
+  });
+  twinkles.forEach(t=>{
+    ctx.beginPath(); ctx.arc(t.x,t.y,t.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${t.alpha})`; ctx.fill();
+    t.alpha+=t.da; if(t.alpha>1||t.alpha<0)t.da*=-1;
+  });
+  stars.forEach((s,i)=>{
+    s.trail.unshift({x:s.x,y:s.y,life:1});
+    if(s.trail.length>25)s.trail.pop();
+    s.trail.forEach(pt=>{
+      const sparkle=Math.random()*0.5+0.5;
+      ctx.beginPath(); ctx.arc(pt.x+Math.random()*2-1,pt.y+Math.random()*2-1,1.5,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${pt.life*sparkle})`; ctx.fill();
     });
-
-    /* Background ripple */
-    document.addEventListener("click", function(e){
-      if(!e.target.closest(".btn")){
-        for(let i=0;i<2;i++){
-          setTimeout(()=>{
-            const ripple=document.createElement("span");
-            ripple.classList.add("ripple","neon");
-            ripple.style.left=(e.pageX-60)+"px";
-            ripple.style.top=(e.pageY-60)+"px";
-            document.getElementById("ripple-layer").appendChild(ripple);
-            ripple.addEventListener("animationend",()=>ripple.remove());
-          }, i*300);
-        }
-      }
-    });
-
-    /* Particles + stars */
-    const canvas=document.getElementById("particles");
-    const ctx=canvas.getContext("2d");
-    let particles=[], stars=[], twinkles=[];
-
-    function resizeCanvas(){
-      canvas.width=window.innerWidth;
-      canvas.height=window.innerHeight;
-    }
-    window.addEventListener("resize",resizeCanvas);
-    resizeCanvas();
-
-    for(let i=0;i<30;i++){
-      particles.push({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height,
-        r: Math.random()*2+1,
-        dx: (Math.random()-0.5)*0.3,
-        dy: (Math.random()-0.5)*0.3
-      });
-    }
-
-    for(let i=0;i<60;i++){
-      twinkles.push({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height,
-        r: Math.random()*1.5+0.5,
-        alpha: Math.random(),
-        da: (Math.random()*0.02)+0.01
-      });
-    }
-
-    function spawnStar(){
-      const side = Math.random()>0.5?"left":"right";
-      stars.push({
-        x: side==="left"?-10:canvas.width+10,
-        y: Math.random()*canvas.height*0.3,
-        dx: side==="left"?2.5:-2.5, // slightly slower
-        dy: 2,
-        trail:[]
-      });
-      setTimeout(spawnStar, Math.random()*3000+2000);
-    }
-    spawnStar();
-
-    function animate(){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-
-      particles.forEach(p=>{
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fillStyle="rgba(255,255,255,0.7)";
-        ctx.fill();
-        p.x+=p.dx; p.y+=p.dy;
-        if(p.x<0||p.x>canvas.width) p.dx*=-1;
-        if(p.y<0||p.y>canvas.height) p.dy*=-1;
-      });
-
-      twinkles.forEach(t=>{
-        ctx.beginPath();
-        ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
-        ctx.fillStyle=`rgba(255,255,255,${t.alpha})`;
-        ctx.fill();
-        t.alpha+=t.da;
-        if(t.alpha>1||t.alpha<0) t.da*=-1;
-      });
-
-      stars.forEach((s,i)=>{
-        s.trail.unshift({x:s.x,y:s.y,life:1});
-        if(s.trail.length>25) s.trail.pop();
-
-        s.trail.forEach(pt=>{
-          ctx.beginPath();
-          ctx.arc(pt.x,pt.y,1.5,0,Math.PI*2);
-          ctx.fillStyle=`rgba(255,255,255,${pt.life})`;
-          ctx.fill();
-          pt.life*=0.92;
-        });
-
-        ctx.beginPath();
-        ctx.arc(s.x,s.y,2.5,0,Math.PI*2);
-        ctx.fillStyle="white";
-        ctx.fill();
-
-        s.x+=s.dx; s.y+=s.dy;
-        if(s.x<-100||s.x>canvas.width+100||s.y>canvas.height+100) stars.splice(i,1);
-      });
-
-      requestAnimationFrame(animate);
-    }
-    animate();
-  </script>
+    ctx.beginPath(); ctx.arc(s.x,s.y,2.5,0,Math.PI*2); ctx.fillStyle="white"; ctx.fill();
+    s.x+=s.dx; s.y+=s.dy;
+    if(s.x<-100||s.x>canvas.width+100||s.y>canvas.height+100){stars.splice(i,1);}
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
 </body>
 </html>
