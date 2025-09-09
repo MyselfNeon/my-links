@@ -1,128 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Neon's Links</title>
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-align: center;
-      padding: 40px;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
+    :root{
+      --btn-width: 85%;          /* width for full-row buttons */
+      --btn-height: 54px;       /* fixed height for all buttons */
+      --btn-radius: 12px;
+      --container-max: 420px;
+      --gap: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body{
+      margin:0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg,#0f172a,#1e293b);
       color: #f8fafc;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:40px 16px;
+      min-height:100vh;
     }
 
-    .container {
-      max-width: 400px;
-      margin: auto;
+    .container{
+      width:100%;
+      max-width: var(--container-max);
+      text-align:center;
     }
 
-    img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      margin-bottom: 20px;
-      border: 4px solid #38bdf8;
-      box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+    .avatar{
+      width:120px;
+      height:120px;
+      border-radius:50%;
+      margin:0 auto 18px;
+      border:4px solid #38bdf8;
+      box-shadow:0 6px 22px rgba(56,189,248,0.18);
+      object-fit:cover;
+      display:block;
     }
 
-    h1 {
-      margin-bottom: 10px;
-      font-size: 24px;
+    h1{
+      margin:6px 0;
+      font-size:22px;
+      letter-spacing:0.2px;
     }
 
-    p {
-      margin-bottom: 30px;
-      color: #94a3b8;
-      font-size: 14px;
+    p.lead{
+      margin:6px 0 20px;
+      color:#94a3b8;
+      font-size:14px;
     }
 
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px 20px;
-      border-radius: 12px;
-      text-decoration: none;
-      color: white;
-      font-weight: bold;
-      font-size: 16px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    /* Base button styling (shared) */
+    .btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      height: var(--btn-height);
+      text-decoration:none;
+      color:#fff;
+      font-weight:700;
+      font-size:15px;
+      border-radius: var(--btn-radius);
+      box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+      transition: transform .18s ease, box-shadow .18s ease;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .btn i {
-      margin-right: 8px;
+    .btn i{ font-size:18px; }
+
+    .btn:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(2,6,23,0.5);
     }
 
-    .telegram {
-      background: #006699; /* dark telegram */
-      margin: 15px auto;
-      width: 85%;
+    /* Full-width buttons (Telegram & GitHub) */
+    .btn.full {
+      width: var(--btn-width);
+      margin: 12px auto;
     }
 
-    .github {
-      background: #24292e; /* GitHub dark */
-      margin: 15px auto;
-      width: 85%;
-    }
-
+    /* Row that contains two half-width buttons */
     .row {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 15px auto;
-      width: 85%;
+      width: var(--btn-width);   /* align with full buttons */
+      margin: 12px auto;
+      display:flex;
+      gap: var(--gap);
     }
 
-    .row a {
-      flex: 1;
+    .row .btn {
+      flex: 1;                  /* equal widths */
+      min-width:0;              /* prevents overflow in narrow screens */
     }
 
+    /* Animated gradients for every button (brand-tinged) */
+    @keyframes gradientShift {
+      0%{ background-position: 0% 50%; }
+      50%{ background-position: 100% 50%; }
+      100%{ background-position: 0% 50%; }
+    }
+
+    /* Telegram: subtle blue gradient */
+    .telegram {
+      background: linear-gradient(90deg,#2ea8f5 0%, #0077b6 50%, #005f99 100%);
+      background-size: 200% 200%;
+      animation: gradientShift 6s ease infinite;
+    }
+
+    /* GitHub: dark sleek gradient */
+    .github {
+      background: linear-gradient(90deg,#42464d 0%, #22272b 60%, #0b0b0b 100%);
+      background-size: 200% 200%;
+      animation: gradientShift 8s ease infinite;
+    }
+
+    /* Instagram: glossy multi-color */
     .instagram {
-      background: linear-gradient(45deg, #feda75, #d62976, #962fbf, #4f5bd5);
+      background: linear-gradient(45deg, #feda75 0%, #d62976 35%, #962fbf 70%, #4f5bd5 100%);
       background-size: 200% 200%;
       animation: gradientShift 5s ease infinite;
     }
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
+    /* Facebook: blue gradient */
     .facebook {
-      background: #1877f2; /* Facebook blue */
+      background: linear-gradient(90deg,#2d6df6 0%, #1877f2 50%, #1357d9 100%);
+      background-size: 200% 200%;
+      animation: gradientShift 6s ease infinite;
     }
 
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    /* Make sure text + icon don't wrap on small widths */
+    .btn span { white-space: nowrap; }
+
+    /* Responsive tweaks for very small screens */
+    @media (max-width:420px){
+      :root { --btn-width: 92%; --gap:10px; }
+      .avatar { width:110px; height:110px; }
     }
   </style>
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <div class="container">
-    <img src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Profile">
+    <!-- Replace avatar URL with your profile picture -->
+    <img class="avatar" src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Neon avatar">
+
     <h1>MyselfNeon</h1>
-    <p>🚀 Dev | 📚 Student | 💡 Exploring Tech</p>
+    <p class="lead">🚀 Dev | 📚 Student | 💡 Exploring Tech</p>
 
-    <a class="btn telegram" href="http://t.me/MyselfNeon" target="_blank">
-      <i class="fab fa-telegram-plane"></i> Telegram
-    </a>
-    <a class="btn github" href="https://github.com/MyselfNeon" target="_blank">
-      <i class="fab fa-github"></i> GitHub
+    <!-- Full-width big buttons -->
+    <a class="btn telegram full" href="https://t.me/MyselfNeon" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+      <i class="fab fa-telegram-plane"></i><span>Telegram</span>
     </a>
 
-    <div class="row">
-      <a class="btn instagram" href="https://instagram.com/" target="_blank">
-        <i class="fab fa-instagram"></i> Insta
+    <a class="btn github full" href="https://github.com/MyselfNeon" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+      <i class="fab fa-github"></i><span>GitHub</span>
+    </a>
+
+    <!-- Two equal half-width buttons aligned exactly under the full buttons -->
+    <div class="row" role="navigation" aria-label="Other links">
+      <a class="btn instagram" href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <i class="fab fa-instagram"></i><span>Instagram</span>
       </a>
-      <a class="btn facebook" href="https://facebook.com/" target="_blank">
-        <i class="fab fa-facebook"></i> Facebook
+
+      <a class="btn facebook" href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        <i class="fab fa-facebook-f"></i><span>Facebook</span>
       </a>
     </div>
   </div>
