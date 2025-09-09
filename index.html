@@ -141,15 +141,6 @@ p.lead { margin:10px 0 26px; color:#00ff66; font-size:14px; font-weight:600; }
 </div>
 
 <script>
-// ================== Customizable Settings ==================
-const SETTINGS = {
-  PARTICLE_COUNT: 30,        // Number of floating particles
-  TWINKLE_COUNT: 60,         // Number of twinkling stars
-  SHOOTING_INTERVAL_MIN: 1000, // Minimum ms between shooting stars
-  SHOOTING_INTERVAL_MAX: 2000, // Maximum ms between shooting stars
-  SHOOTING_TRAIL_LENGTH: 50    // Length of shooting star trail
-};
-
 // ================== Canvas Setup ==================
 const canvas=document.getElementById("particles");
 const ctx=canvas.getContext("2d");
@@ -159,13 +150,13 @@ resizeCanvas();
 
 // ================== Particles ==================
 let particles=[];
-for(let i=0;i<SETTINGS.PARTICLE_COUNT;i++){
+for(let i=0;i<30;i++){
   particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.3,dy:(Math.random()-0.5)*0.3});
 }
 
 // ================== Twinkling Stars ==================
 let twinkles=[];
-for(let i=0;i<SETTINGS.TWINKLE_COUNT;i++){
+for(let i=0;i<60;i++){
   twinkles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,alpha:Math.random(),da:(Math.random()*0.02)+0.005});
 }
 
@@ -199,17 +190,15 @@ function spawnShootingStar(){
   const colors=["#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e"];
   const color=colors[Math.floor(Math.random()*colors.length)];
   shootingStars.push({
-    x:-50, // start offscreen left
+    x:Math.random()*canvas.width*0.7,
     y:Math.random()*canvas.height*0.3,
     dx:2+Math.random()*1,
-    dy:1+Math.random()*0.5,
+    dy:1+Math.random()*1,
     r:6,
     color:color,
     trail:[]
   });
-  setTimeout(spawnShootingStar,
-    SETTINGS.SHOOTING_INTERVAL_MIN + Math.random()*(SETTINGS.SHOOTING_INTERVAL_MAX - SETTINGS.SHOOTING_INTERVAL_MIN)
-  );
+  setTimeout(spawnShootingStar,4000+Math.random()*4000);
 }
 spawnShootingStar();
 
@@ -265,12 +254,12 @@ function animate(){
   // shooting stars
   shootingStars.forEach((s,i)=>{
     s.trail.unshift({x:s.x,y:s.y,life:1});
-    if(s.trail.length>SETTINGS.SHOOTING_TRAIL_LENGTH) s.trail.pop();
+    if(s.trail.length>20)s.trail.pop();
     // draw star head
     drawStar(ctx,s.x,s.y,s.r,s.color);
     // draw trail
-    s.trail.forEach(pt=>{
-      drawStar(ctx,pt.x,pt.y,s.r*0.4,s.color);
+    s.trail.forEach((pt,ti)=>{
+      drawStar(ctx,pt.x,pt.y,s.r*(0.6-ti/25),s.color);
       pt.life-=0.05;
     });
     s.x+=s.dx; s.y+=s.dy;
@@ -333,4 +322,4 @@ document.addEventListener("click", e=>{
 });
 </script>
 </body>
-  </html>
+</html>
