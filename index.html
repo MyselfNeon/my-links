@@ -4,65 +4,71 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Neon's Links</title>
-
-  <!-- Font Awesome for icons -->
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    :root{
-      --btn-width: 85%;          /* width for full-row buttons */
-      --btn-height: 54px;       /* fixed height for all buttons */
+    :root {
+      --btn-width: 85%;
+      --btn-height: 56px;
       --btn-radius: 12px;
       --container-max: 420px;
       --gap: 12px;
     }
 
-    * { box-sizing: border-box; }
-
-    body{
-      margin:0;
+    body {
+      margin: 0;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg,#0f172a,#1e293b);
       color: #f8fafc;
       display:flex;
       align-items:flex-start;
       justify-content:center;
-      padding:40px 16px;
+      padding:60px 16px;
       min-height:100vh;
+      overflow:hidden;
+      position: relative;
     }
 
-    .container{
+    #particles {
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #ripple-layer {
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      pointer-events:none;
+      z-index: 1;
+    }
+
+    .container {
       width:100%;
       max-width: var(--container-max);
       text-align:center;
+      position: relative;
+      z-index: 3;
     }
 
-    .avatar{
+    .avatar {
       width:120px;
       height:120px;
       border-radius:50%;
-      margin:0 auto 18px;
+      margin:0 auto 22px;
       border:4px solid #38bdf8;
       box-shadow:0 6px 22px rgba(56,189,248,0.18);
       object-fit:cover;
       display:block;
     }
 
-    h1{
-      margin:6px 0;
-      font-size:22px;
-      letter-spacing:0.2px;
-    }
+    h1 { margin:10px 0; font-size:22px; }
+    p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 
-    p.lead{
-      margin:6px 0 20px;
-      color:#94a3b8;
-      font-size:14px;
-    }
-
-    /* Base button styling (shared) */
-    .btn{
+    .btn {
       display:flex;
       align-items:center;
       justify-content:center;
@@ -73,109 +79,262 @@
       font-weight:700;
       font-size:15px;
       border-radius: var(--btn-radius);
+      border: 2px solid rgba(255,255,255,0.15);
       box-shadow: 0 6px 18px rgba(2,6,23,0.45);
       transition: transform .18s ease, box-shadow .18s ease;
-      -webkit-tap-highlight-color: transparent;
+    }
+    .btn i { font-size:19px; margin-top:2px; }
+    .btn:hover { transform: translateY(-3px); }
+
+    .btn.full { width: var(--btn-width); margin: 14px auto; }
+    .row { width: var(--btn-width); margin: 14px auto; display:flex; gap: var(--gap); }
+    .row .btn { flex: 1; min-width:0; }
+
+    /* Gradients */
+    @keyframes gradientShift { 
+      0%{background-position:0% 50%} 
+      50%{background-position:100% 50%} 
+      100%{background-position:0% 50%}
+    }
+    .telegram { background:linear-gradient(90deg,#2ea8f5,#0077b6,#005f99);background-size:200% 200%;animation:gradientShift 6s infinite;}
+    .github { background:linear-gradient(90deg,#42464d,#22272b,#0b0b0b);background-size:200% 200%;animation:gradientShift 8s infinite;}
+    .instagram { background:linear-gradient(45deg,#feda75,#d62976,#962fbf,#4f5bd5);background-size:200% 200%;animation:gradientShift 5s infinite;}
+    .facebook { background:linear-gradient(90deg,#2d6df6,#1877f2,#1357d9);background-size:200% 200%;animation:gradientShift 6s infinite;}
+
+    /* Ripple effects */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      pointer-events: none;
+      animation: ripple-wave 2s ease-out forwards;
     }
 
-    .btn i{ font-size:18px; }
-
-    .btn:hover{
-      transform: translateY(-4px);
-      box-shadow: 0 12px 30px rgba(2,6,23,0.5);
+    /* Outlined for buttons */
+    .ripple.outline {
+      border: 3px solid currentColor;
+      opacity: 0.9;
+      transform: scale(0.3);
     }
 
-    /* Full-width buttons (Telegram & GitHub) */
-    .btn.full {
-      width: var(--btn-width);
-      margin: 12px auto;
+    /* Neon glow for background */
+    .ripple.neon {
+      background: rgba(255,255,255,0.15);
+      box-shadow: 0 0 18px rgba(0,200,255,0.8), 0 0 35px rgba(150,0,255,0.6);
+      opacity: 0.7;
+      transform: scale(0.2);
     }
 
-    /* Row that contains two half-width buttons */
-    .row {
-      width: var(--btn-width);   /* align with full buttons */
-      margin: 12px auto;
-      display:flex;
-      gap: var(--gap);
+    @keyframes ripple-wave {
+      to {
+        transform: scale(1.8);
+        opacity: 0;
+      }
     }
 
-    .row .btn {
-      flex: 1;                  /* equal widths */
-      min-width:0;              /* prevents overflow in narrow screens */
+    /* Heartbeat pulse (center) */
+    .heart {
+      position: fixed;
+      top: 50%; left: 50%;
+      width: 80px; height: 80px;
+      transform: translate(-50%,-50%) rotate(-45deg) scale(0.3);
+      background: radial-gradient(circle at 30% 30%, #ff4d6d, #ff1a4d);
+      animation: heartbeat 8s infinite;
+      opacity: 0;
+      z-index: 1;
     }
-
-    /* Animated gradients for every button (brand-tinged) */
-    @keyframes gradientShift {
-      0%{ background-position: 0% 50%; }
-      50%{ background-position: 100% 50%; }
-      100%{ background-position: 0% 50%; }
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: inherit;
     }
+    .heart::before { top: -40px; left: 0; }
+    .heart::after { left: 40px; top: 0; }
 
-    /* Telegram: subtle blue gradient */
-    .telegram {
-      background: linear-gradient(90deg,#2ea8f5 0%, #0077b6 50%, #005f99 100%);
-      background-size: 200% 200%;
-      animation: gradientShift 6s ease infinite;
-    }
-
-    /* GitHub: dark sleek gradient */
-    .github {
-      background: linear-gradient(90deg,#42464d 0%, #22272b 60%, #0b0b0b 100%);
-      background-size: 200% 200%;
-      animation: gradientShift 8s ease infinite;
-    }
-
-    /* Instagram: glossy multi-color */
-    .instagram {
-      background: linear-gradient(45deg, #feda75 0%, #d62976 35%, #962fbf 70%, #4f5bd5 100%);
-      background-size: 200% 200%;
-      animation: gradientShift 5s ease infinite;
-    }
-
-    /* Facebook: blue gradient */
-    .facebook {
-      background: linear-gradient(90deg,#2d6df6 0%, #1877f2 50%, #1357d9 100%);
-      background-size: 200% 200%;
-      animation: gradientShift 6s ease infinite;
-    }
-
-    /* Make sure text + icon don't wrap on small widths */
-    .btn span { white-space: nowrap; }
-
-    /* Responsive tweaks for very small screens */
-    @media (max-width:420px){
-      :root { --btn-width: 92%; --gap:10px; }
-      .avatar { width:110px; height:110px; }
+    @keyframes heartbeat {
+      0%, 70%, 100% { transform: translate(-50%,-50%) rotate(-45deg) scale(0.3); opacity: 0; }
+      5% { transform: translate(-50%,-50%) rotate(-45deg) scale(1); opacity: 0.8; }
+      15% { transform: translate(-50%,-50%) rotate(-45deg) scale(0.8); opacity: 0.6; }
+      30% { transform: translate(-50%,-50%) rotate(-45deg) scale(1.2); opacity: 0.4; }
+      50% { transform: translate(-50%,-50%) rotate(-45deg) scale(1.5); opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Replace avatar URL with your profile picture -->
-    <img class="avatar" src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Neon avatar">
+  <canvas id="particles"></canvas>
+  <div id="ripple-layer"></div>
+  <div class="heart"></div>
 
+  <div class="container">
+    <img class="avatar" src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Neon avatar">
     <h1>MyselfNeon</h1>
     <p class="lead">🚀 Dev | 📚 Student | 💡 Exploring Tech</p>
 
-    <!-- Full-width big buttons -->
-    <a class="btn telegram full" href="https://t.me/MyselfNeon" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+    <a class="btn telegram full" href="https://t.me/MyselfNeon" target="_blank">
       <i class="fab fa-telegram-plane"></i><span>Telegram</span>
     </a>
 
-    <a class="btn github full" href="https://github.com/MyselfNeon" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+    <a class="btn github full" href="https://github.com/MyselfNeon" target="_blank">
       <i class="fab fa-github"></i><span>GitHub</span>
     </a>
 
-    <!-- Two equal half-width buttons aligned exactly under the full buttons -->
-    <div class="row" role="navigation" aria-label="Other links">
-      <a class="btn instagram" href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+    <div class="row">
+      <a class="btn instagram" href="https://instagram.com/" target="_blank">
         <i class="fab fa-instagram"></i><span>Instagram</span>
       </a>
-
-      <a class="btn facebook" href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+      <a class="btn facebook" href="https://facebook.com/" target="_blank">
         <i class="fab fa-facebook-f"></i><span>Facebook</span>
       </a>
     </div>
   </div>
+
+  <script>
+    /* Button ripple */
+    document.querySelectorAll(".btn").forEach(btn => {
+      btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            const ripple = document.createElement("span");
+            ripple.classList.add("ripple","outline");
+            ripple.style.left = (rect.left + x - 60) + "px";
+            ripple.style.top = (rect.top + y - 60) + "px";
+            ripple.style.color = window.getComputedStyle(this).color;
+            document.body.appendChild(ripple);
+            ripple.addEventListener("animationend", () => ripple.remove());
+          }, i * 250);
+        }
+
+        setTimeout(()=> window.open(this.href,"_blank"), 600);
+      });
+    });
+
+    /* Background ripple */
+    document.addEventListener("click", function(e) {
+      if (!e.target.closest(".btn")) {
+        for (let i = 0; i < 2; i++) {
+          setTimeout(() => {
+            const ripple = document.createElement("span");
+            ripple.classList.add("ripple","neon");
+            ripple.style.left = (e.pageX - 60) + "px";
+            ripple.style.top = (e.pageY - 60) + "px";
+            document.getElementById("ripple-layer").appendChild(ripple);
+            ripple.addEventListener("animationend", () => ripple.remove());
+          }, i * 300);
+        }
+      }
+    });
+
+    /* Particles + stars */
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let particles = [], stars = [], twinkles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    // floating particles
+    for (let i = 0; i < 30; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.3,
+        dy: (Math.random() - 0.5) * 0.3
+      });
+    }
+
+    // twinkling stars
+    for (let i = 0; i < 60; i++) {
+      twinkles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.5,
+        alpha: Math.random(),
+        da: (Math.random() * 0.02) + 0.01
+      });
+    }
+
+    // shooting stars
+    function spawnStar() {
+      const side = Math.random() > 0.5 ? "left" : "right";
+      stars.push({
+        x: side === "left" ? -10 : canvas.width + 10,
+        y: Math.random() * canvas.height * 0.3,
+        dx: side === "left" ? 4 : -4,
+        dy: 3,
+        trail: []
+      });
+      setTimeout(spawnStar, Math.random() * 3000 + 2000);
+    }
+    spawnStar();
+
+    function animate() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      // background particles
+      ctx.fillStyle = "rgba(255,255,255,0.7)";
+      particles.forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+        p.x += p.dx; p.y += p.dy;
+        if(p.x<0||p.x>canvas.width) p.dx*=-1;
+        if(p.y<0||p.y>canvas.height) p.dy*=-1;
+      });
+
+      // twinkling stars
+      twinkles.forEach(t=>{
+        ctx.beginPath();
+        ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,255,${t.alpha})`;
+        ctx.fill();
+        t.alpha += t.da;
+        if(t.alpha > 1 || t.alpha < 0){ t.da *= -1; }
+      });
+
+      // shooting stars with sparkling trails
+      stars.forEach((s,i)=>{
+        // add trail point
+        s.trail.unshift({x:s.x,y:s.y,life:1});
+        if(s.trail.length>25) s.trail.pop();
+
+        // draw trail as sparkles
+        s.trail.forEach((pt,j)=>{
+          ctx.beginPath();
+          ctx.arc(pt.x,pt.y,1.5,0,Math.PI*2);
+          ctx.fillStyle=`rgba(255,255,255,${pt.life})`;
+          ctx.fill();
+          pt.life *= 0.92;
+        });
+
+        // draw head
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,2.5,0,Math.PI*2);
+        ctx.fillStyle="white";
+        ctx.fill();
+
+        s.x += s.dx; s.y += s.dy;
+        if(s.x < -100 || s.x > canvas.width+100 || s.y > canvas.height+100){
+          stars.splice(i,1);
+        }
+      });
+
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
 </body>
-</html>
+  </html>
