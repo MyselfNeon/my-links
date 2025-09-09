@@ -4,66 +4,73 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Neon's Links</title>
-
-  <!-- Font Awesome for icons -->
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    :root{
+    :root {
       --btn-width: 85%;
-      --btn-height: 56px;       /* slightly taller */
+      --btn-height: 56px;
       --btn-radius: 12px;
       --container-max: 420px;
       --gap: 12px;
     }
 
-    * { box-sizing: border-box; }
-
-    body{
-      margin:0;
+    body {
+      margin: 0;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg,#0f172a,#1e293b);
       color: #f8fafc;
       display:flex;
       align-items:flex-start;
       justify-content:center;
-      padding:60px 16px; /* shifted down */
+      padding:60px 16px;
       min-height:100vh;
+      overflow:hidden; /* to keep particles inside */
       position: relative;
-      overflow-x:hidden;
     }
 
-    .container{
+    /* Particles layer */
+    #particles {
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
       width:100%;
       max-width: var(--container-max);
       text-align:center;
+      position: relative;
+      z-index: 2; /* over particles */
     }
 
-    .avatar{
+    .avatar {
       width:120px;
       height:120px;
       border-radius:50%;
-      margin:0 auto 22px; /* shifted lower */
+      margin:0 auto 22px;
       border:4px solid #38bdf8;
       box-shadow:0 6px 22px rgba(56,189,248,0.18);
       object-fit:cover;
       display:block;
     }
 
-    h1{
+    h1 {
       margin:10px 0;
       font-size:22px;
     }
 
-    p.lead{
+    p.lead {
       margin:10px 0 26px;
       color:#94a3b8;
       font-size:14px;
     }
 
-    /* Base button */
-    .btn{
+    /* Buttons */
+    .btn {
       display:flex;
       align-items:center;
       justify-content:center;
@@ -79,131 +86,161 @@
       transition: transform .18s ease, box-shadow .18s ease;
       -webkit-tap-highlight-color: transparent;
     }
+    .btn i { font-size:19px; margin-top:2px; }
+    .btn:hover { transform: translateY(-3px); }
 
-    .btn i{ font-size:19px; margin-top:2px; } /* nudged down */
-
-    .btn:hover{
-      transform: translateY(-3px);
-      box-shadow: 0 12px 30px rgba(2,6,23,0.55);
-    }
-
-    /* Full width buttons */
     .btn.full {
       width: var(--btn-width);
       margin: 14px auto;
     }
 
-    /* Row of two buttons */
     .row {
       width: var(--btn-width);
       margin: 14px auto;
       display:flex;
       gap: var(--gap);
     }
+    .row .btn { flex: 1; min-width:0; }
 
-    .row .btn {
-      flex: 1;
-      min-width:0;
-    }
-
-    /* Gradient animations */
+    /* Gradient backgrounds */
     @keyframes gradientShift {
       0%{ background-position: 0% 50%; }
       50%{ background-position: 100% 50%; }
       100%{ background-position: 0% 50%; }
     }
-
     .telegram {
-      background: linear-gradient(90deg,#2ea8f5 0%, #0077b6 50%, #005f99 100%);
-      background-size: 200% 200%;
-      animation: gradientShift 6s ease infinite;
+      background: linear-gradient(90deg,#2ea8f5,#0077b6,#005f99);
+      background-size:200% 200%; animation: gradientShift 6s ease infinite;
     }
-
     .github {
-      background: linear-gradient(90deg,#42464d 0%, #22272b 50%, #0b0b0b 100%);
-      background-size: 200% 200%;
-      animation: gradientShift 8s ease infinite;
+      background: linear-gradient(90deg,#42464d,#22272b,#0b0b0b);
+      background-size:200% 200%; animation: gradientShift 8s ease infinite;
     }
-
     .instagram {
-      background: linear-gradient(45deg, #feda75 0%, #d62976 35%, #962fbf 70%, #4f5bd5 100%);
-      background-size: 200% 200%;
-      animation: gradientShift 5s ease infinite;
+      background: linear-gradient(45deg,#feda75,#d62976,#962fbf,#4f5bd5);
+      background-size:200% 200%; animation: gradientShift 5s ease infinite;
     }
-
     .facebook {
-      background: linear-gradient(90deg,#2d6df6 0%, #1877f2 50%, #1357d9 100%);
-      background-size: 200% 200%;
-      animation: gradientShift 6s ease infinite;
+      background: linear-gradient(90deg,#2d6df6,#1877f2,#1357d9);
+      background-size:200% 200%; animation: gradientShift 6s ease infinite;
     }
 
-    /* Ripple effect */
+    /* Ripple */
     .ripple {
       position: absolute;
       border-radius: 50%;
       transform: scale(0);
-      animation: ripple-animation 0.6s linear;
+      opacity: 0.75;
       pointer-events: none;
-      z-index: 9999;
+      z-index: 3;
+      animation: ripple-animation 1.6s ease-out forwards;
+      filter: blur(6px);
+      box-shadow: 0 0 22px rgba(255,255,255,0.35);
     }
 
     @keyframes ripple-animation {
       to {
-        transform: scale(6);
+        transform: scale(4.8);
         opacity: 0;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Particles background -->
+  <canvas id="particles"></canvas>
+
   <div class="container">
     <img class="avatar" src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Neon avatar">
 
     <h1>MyselfNeon</h1>
     <p class="lead">🚀 Dev | 📚 Student | 💡 Exploring Tech</p>
 
-    <a class="btn telegram full" href="https://t.me/MyselfNeon" target="_blank" aria-label="Telegram">
+    <a class="btn telegram full" href="https://t.me/MyselfNeon" target="_blank">
       <i class="fab fa-telegram-plane"></i><span>Telegram</span>
     </a>
 
-    <a class="btn github full" href="https://github.com/MyselfNeon" target="_blank" aria-label="GitHub">
+    <a class="btn github full" href="https://github.com/MyselfNeon" target="_blank">
       <i class="fab fa-github"></i><span>GitHub</span>
     </a>
 
     <div class="row">
-      <a class="btn instagram" href="https://instagram.com/" target="_blank" aria-label="Instagram">
+      <a class="btn instagram" href="https://instagram.com/" target="_blank">
         <i class="fab fa-instagram"></i><span>Instagram</span>
       </a>
-
-      <a class="btn facebook" href="https://facebook.com/" target="_blank" aria-label="Facebook">
+      <a class="btn facebook" href="https://facebook.com/" target="_blank">
         <i class="fab fa-facebook-f"></i><span>Facebook</span>
       </a>
     </div>
   </div>
 
   <script>
+    /* Ripple effect */
     document.addEventListener("click", function(e) {
-      // Decide ripple color based on target
-      let rippleColor = "rgba(255,255,255,0.35)"; // default for background
+      let rippleColor;
+      if (e.target.closest(".telegram")) {
+        rippleColor = "radial-gradient(circle, rgba(0,136,204,0.65) 0%, rgba(0,136,204,0.0) 70%)";
+      } else if (e.target.closest(".github")) {
+        rippleColor = "radial-gradient(circle, rgba(36,41,46,0.65) 0%, rgba(36,41,46,0.0) 70%)";
+      } else if (e.target.closest(".instagram")) {
+        rippleColor = "radial-gradient(circle, rgba(214,41,118,0.65) 0%, rgba(214,41,118,0.0) 70%)";
+      } else if (e.target.closest(".facebook")) {
+        rippleColor = "radial-gradient(circle, rgba(24,119,242,0.65) 0%, rgba(24,119,242,0.0) 70%)";
+      } else {
+        rippleColor = "radial-gradient(circle, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.0) 70%)";
+      }
 
-      if (e.target.closest(".telegram")) rippleColor = "rgba(0, 136, 204, 0.4)";
-      if (e.target.closest(".github"))   rippleColor = "rgba(36,41,46,0.4)";
-      if (e.target.closest(".instagram")) rippleColor = "rgba(214,41,118,0.4)";
-      if (e.target.closest(".facebook")) rippleColor = "rgba(24,119,242,0.4)";
-
-      const ripple = document.createElement("span");
-      ripple.classList.add("ripple");
-      ripple.style.background = rippleColor;
-      document.body.appendChild(ripple);
-
-      const size = Math.max(window.innerWidth, window.innerHeight);
-      ripple.style.width = ripple.style.height = size + "px";
-
-      ripple.style.left = (e.pageX - size / 2) + "px";
-      ripple.style.top = (e.pageY - size / 2) + "px";
-
-      ripple.addEventListener("animationend", () => ripple.remove());
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          const ripple = document.createElement("span");
+          ripple.classList.add("ripple");
+          ripple.style.width = ripple.style.height = "220px";
+          ripple.style.left = (e.pageX - 110) + "px";
+          ripple.style.top = (e.pageY - 110) + "px";
+          ripple.style.background = rippleColor;
+          document.body.appendChild(ripple);
+          ripple.addEventListener("animationend", () => ripple.remove());
+        }, i * 250);
+      }
     });
+
+    /* Particles */
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    for (let i = 0; i < 35; i++) { // only a few particles
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.4,
+        dy: (Math.random() - 0.5) * 0.4,
+      });
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = "rgba(255,255,255,0.7)";
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
   </script>
 </body>
-  </html>
+</html>
