@@ -62,7 +62,10 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
   font-weight:700;
   font-size:15px;
   border-radius: 12px;
-  border: 2px solid rgba(255,255,255,0.15);
+  border: 3px solid transparent;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
   box-shadow: 0 6px 18px rgba(2,6,23,0.45);
   transition: transform .18s ease, box-shadow .18s ease;
 }
@@ -72,6 +75,26 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 .btn.full { width: 85%; margin: 14px auto; }
 .row { width: 85%; margin: 14px auto; display:flex; gap:12px; }
 .row .btn { flex:1; min-width:0; }
+
+/* Animated button borders */
+.btn::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  padding:3px;
+  border-radius:12px;
+  background:linear-gradient(90deg,#ff4d6d,#38bdf8,#facc15,#d946ef);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  z-index:-1;
+  animation: borderShift 5s linear infinite;
+}
+@keyframes borderShift{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
 
 /* Ripple effects */
 .ripple {
@@ -95,26 +118,25 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 }
 @keyframes ripple-wave { to { transform: scale(1.8); opacity:0; } }
 
-/* Heart pulse every 10 seconds (center) */
-.heart {
+/* Heart pulse */
+.heart-wave {
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 90px; 
-  height: 90px;
+  width: 120px;
+  height: 120px;
   background: rgba(200,0,0,0.4);
   border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0);
+  transform: translate(-50%,-50%) scale(0);
   opacity: 0;
   pointer-events: none;
-  z-index: 2;
+  z-index:2;
 }
 </style>
 </head>
 <body>
 <canvas id="particles"></canvas>
 <div id="ripple-layer"></div>
-<div class="heart"></div>
 
 <div class="container">
 <img class="avatar" src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Neon avatar">
@@ -130,25 +152,13 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 </div>
 
 <script>
-// Heart pulse every 10 seconds (center)
-const heart = document.querySelector(".heart");
-function pulseHeart() {
-  heart.style.opacity = 1;
-  heart.style.transform = "translate(-50%,-50%) scale(1.2)";
-  setTimeout(()=>{
-    heart.style.transform = "translate(-50%,-50%) scale(0)";
-    heart.style.opacity = 0;
-  },800);
-}
-setInterval(pulseHeart,10000);
-
-// Button ripple
+// Button ripple effect
 document.querySelectorAll(".btn").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
-    const rect=btn.getBoundingClientRect();
-    const x=e.clientX-rect.left;
-    const y=e.clientY-rect.top;
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
     for(let i=0;i<3;i++){
       setTimeout(()=>{
         const ripple=document.createElement("span");
@@ -180,7 +190,7 @@ document.addEventListener("click", e=>{
   }
 });
 
-// Particles + twinkles + shooting stars
+// Particles + stars
 const canvas=document.getElementById("particles");
 const ctx=canvas.getContext("2d");
 let particles=[],stars=[],twinkles=[];
@@ -189,15 +199,25 @@ window.addEventListener("resize",resizeCanvas);
 resizeCanvas();
 
 // Floating particles
-for(let i=0;i<30;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.3,dy:(Math.random()-0.5)*0.3});}
+for(let i=0;i<30;i++){
+  particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.3,dy:(Math.random()-0.5)*0.3});
+}
 
 // Twinkling stars
-for(let i=0;i<60;i++){twinkles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,alpha:Math.random(),da:(Math.random()*0.02)+0.005});}
+for(let i=0;i<60;i++){
+  twinkles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,alpha:Math.random(),da:(Math.random()*0.02)+0.005});
+}
 
 // Shooting stars
 function spawnStar(){
-  const side=Math.random()>0.5?"left":"right";
-  stars.push({x:side==="left"?-10:canvas.width+10,y:Math.random()*canvas.height*0.3,dx:1.5,dy:1.2,trail:[]});
+  const side = Math.random()>0.5 ? "left" : "right";
+  stars.push({
+    x: side==="left"?-10:canvas.width+10,
+    y: Math.random()*canvas.height*0.3,
+    dx: side==="left"?1.5:-1.5,
+    dy:1.2,
+    trail:[]
+  });
   setTimeout(spawnStar, Math.random()*3000+2000);
 }
 spawnStar();
@@ -205,30 +225,57 @@ spawnStar();
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   particles.forEach(p=>{
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle="rgba(255,255,255,0.7)"; ctx.fill();
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle="rgba(255,255,255,0.7)";
+    ctx.fill();
     p.x+=p.dx; p.y+=p.dy;
     if(p.x<0||p.x>canvas.width)p.dx*=-1;
     if(p.y<0||p.y>canvas.height)p.dy*=-1;
   });
   twinkles.forEach(t=>{
-    ctx.beginPath(); ctx.arc(t.x,t.y,t.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${t.alpha})`; ctx.fill();
-    t.alpha+=t.da; if(t.alpha>1||t.alpha<0)t.da*=-1;
+    ctx.beginPath();
+    ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${t.alpha})`;
+    ctx.fill();
+    t.alpha+=t.da;
+    if(t.alpha>1||t.alpha<0)t.da*=-1;
   });
   stars.forEach((s,i)=>{
     s.trail.unshift({x:s.x,y:s.y,life:1});
-    if(s.trail.length>25)s.trail.pop();
+    if(s.trail.length>25) s.trail.pop();
     s.trail.forEach(pt=>{
       const sparkle=Math.random()*0.5+0.5;
-      ctx.beginPath(); ctx.arc(pt.x+Math.random()*2-1,pt.y+Math.random()*2-1,1.5,0,Math.PI*2);
-      ctx.fillStyle=`rgba(255,255,255,${pt.life*sparkle})`; ctx.fill();
+      ctx.beginPath();
+      ctx.arc(pt.x+Math.random()*2-1, pt.y+Math.random()*2-1,1.5,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${pt.life*sparkle})`;
+      ctx.fill();
     });
-    ctx.beginPath(); ctx.arc(s.x,s.y,2.5,0,Math.PI*2); ctx.fillStyle="white"; ctx.fill();
-    s.x+=s.dx; s.y+=s.dy;
-    if(s.x<-100||s.x>canvas.width+100||s.y>canvas.height+100){stars.splice(i,1);}
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,2.5,0,Math.PI*2);
+    ctx.fillStyle="white";
+    ctx.fill();
+    s.x+=s.dx;
+    s.y+=s.dy;
+    if(s.x<-100||s.x>canvas.width+100||s.y>canvas.height+100) stars.splice(i,1);
   });
   requestAnimationFrame(animate);
 }
 animate();
+
+// Heart pulse with wave repel effect
+const heart = document.createElement("div");
+heart.classList.add("heart-wave");
+document.body.appendChild(heart);
+function pulseHeart() {
+  heart.style.opacity=1;
+  heart.style.transform="translate(-50%,-50%) scale(1.5)";
+  setTimeout(()=>{
+    heart.style.transform="translate(-50%,-50%) scale(0)";
+    heart.style.opacity=0;
+  },1200);
+}
+setInterval(pulseHeart,10000);
 </script>
 </body>
 </html>
