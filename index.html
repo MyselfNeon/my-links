@@ -26,7 +26,6 @@ body {
   pointer-events:none;
   z-index:0;
 }
-
 #ripple-layer { z-index:1; }
 
 .container {
@@ -35,7 +34,7 @@ body {
   text-align:center;
   position: relative;
   z-index:3;
-  margin-top: 28px; /* shift all content lower */
+  margin-top: 28px;
 }
 
 .avatar {
@@ -126,7 +125,6 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 }
 .heart::before { top: -70px; left: 0; }
 .heart::after { left: 70px; top: 0; }
-
 </style>
 </head>
 <body>
@@ -148,96 +146,76 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 </div>
 
 <script>
+// Restore old heart function
 const heart = document.querySelector(".heart");
 
-// Heart pulse on click
-document.addEventListener("click", function(e){
-  if (!e.target.closest(".btn")) {
-    heart.style.opacity = 1;
-    heart.style.transform = `translate(${e.pageX - window.innerWidth/2}px,${e.pageY - window.innerHeight/2}px) rotate(-45deg) scale(1.5)`;
-    setTimeout(()=>{
-      heart.style.transform = "translate(-50%,-50%) rotate(-45deg) scale(0.3)";
-      heart.style.opacity = 0;
-    }, 1000);
-  }
-});
-
-// Heart auto trigger every 10s
-setInterval(()=>{
+function pulseHeart(){
   heart.style.opacity = 1;
   heart.style.transform = "translate(-50%,-50%) rotate(-45deg) scale(1.5)";
   setTimeout(()=>{
     heart.style.transform = "translate(-50%,-50%) rotate(-45deg) scale(0.3)";
     heart.style.opacity = 0;
-  }, 1000);
-},10000);
+  },1000);
+}
+document.addEventListener("click", e=>{
+  if(!e.target.closest(".btn")){
+    pulseHeart();
+  }
+});
+setInterval(pulseHeart,10000);
 
-/* Button ripple */
-document.querySelectorAll(".btn").forEach(btn => {
-  btn.addEventListener("click", function(e) {
+// Button ripple
+document.querySelectorAll(".btn").forEach(btn=>{
+  btn.addEventListener("click", e=>{
     e.preventDefault();
-    const rect = this.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    for (let i = 0; i < 3; i++) {
-      setTimeout(() => {
-        const ripple = document.createElement("span");
+    const rect=btn.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const y=e.clientY-rect.top;
+    for(let i=0;i<3;i++){
+      setTimeout(()=>{
+        const ripple=document.createElement("span");
         ripple.classList.add("ripple","outline");
-        ripple.style.left = (rect.left + x - 60) + "px";
-        ripple.style.top = (rect.top + y - 60) + "px";
-        ripple.style.color = window.getComputedStyle(this).color;
+        ripple.style.left=(rect.left+x-60)+"px";
+        ripple.style.top=(rect.top+y-60)+"px";
+        ripple.style.color=getComputedStyle(btn).color;
         document.body.appendChild(ripple);
-        ripple.addEventListener("animationend", () => ripple.remove());
-      }, i * 250);
+        ripple.addEventListener("animationend",()=>ripple.remove());
+      },i*250);
     }
-
-    setTimeout(()=> window.open(this.href,"_blank"), 600);
+    setTimeout(()=>window.open(btn.href,"_blank"),600);
   });
 });
 
-/* Background ripple */
-document.addEventListener("click", function(e) {
-  if (!e.target.closest(".btn")) {
-    for (let i = 0; i < 2; i++) {
-      setTimeout(() => {
-        const ripple = document.createElement("span");
+// Background ripple
+document.addEventListener("click", e=>{
+  if(!e.target.closest(".btn")){
+    for(let i=0;i<2;i++){
+      setTimeout(()=>{
+        const ripple=document.createElement("span");
         ripple.classList.add("ripple","neon");
-        ripple.style.left = (e.pageX - 60) + "px";
-        ripple.style.top = (e.pageY - 60) + "px";
+        ripple.style.left=(e.pageX-60)+"px";
+        ripple.style.top=(e.pageY-60)+"px";
         document.getElementById("ripple-layer").appendChild(ripple);
-        ripple.addEventListener("animationend", () => ripple.remove());
-      }, i * 300);
+        ripple.addEventListener("animationend",()=>ripple.remove());
+      },i*300);
     }
   }
 });
 
-/* Particles + stars */
-const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
-let particles=[], stars=[], twinkles=[];
-
-function resizeCanvas(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resizeCanvas);
+// Particles + stars
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+let particles=[],stars=[],twinkles=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+window.addEventListener("resize",resizeCanvas);
 resizeCanvas();
 
-// floating particles
-for(let i=0;i<30;i++){
-  particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.3,dy:(Math.random()-0.5)*0.3});
-}
+for(let i=0;i<30;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.3,dy:(Math.random()-0.5)*0.3});}
+for(let i=0;i<60;i++){twinkles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,alpha:Math.random(),da:(Math.random()*0.02)+0.005});}
 
-// twinkling stars
-for(let i=0;i<60;i++){
-  twinkles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,alpha:Math.random(),da:(Math.random()*0.02)+0.01});
-}
-
-// shooting stars
 function spawnStar(){
   const side=Math.random()>0.5?"left":"right";
-  stars.push({x:side==="left"?-10:canvas.width+10,y:Math.random()*canvas.height*0.3,dx:side==="left"?3:-3,dy:2,trail:[]});
+  stars.push({x:side==="left"?-10:canvas.width+10,y:Math.random()*canvas.height*0.3,dx:side==="left"?2:-2,dy:1.5,trail:[]});
   setTimeout(spawnStar, Math.random()*3000+2000);
 }
 spawnStar();
@@ -246,45 +224,27 @@ function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
   particles.forEach(p=>{
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle="rgba(255,255,255,0.7)";
-    ctx.fill();
-    p.x+=p.dx;p.y+=p.dy;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle="rgba(255,255,255,0.7)"; ctx.fill();
+    p.x+=p.dx; p.y+=p.dy;
     if(p.x<0||p.x>canvas.width)p.dx*=-1;
     if(p.y<0||p.y>canvas.height)p.dy*=-1;
   });
 
   twinkles.forEach(t=>{
-    ctx.beginPath();
-    ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,255,255,${t.alpha})`;
-    ctx.fill();
-    t.alpha+=t.da;
-    if(t.alpha>1||t.alpha<0)t.da*=-1;
+    ctx.beginPath(); ctx.arc(t.x,t.y,t.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${t.alpha})`; ctx.fill();
+    t.alpha+=t.da; if(t.alpha>1||t.alpha<0)t.da*=-1;
   });
 
   stars.forEach((s,i)=>{
     s.trail.unshift({x:s.x,y:s.y,life:1});
     if(s.trail.length>25)s.trail.pop();
-
     s.trail.forEach(pt=>{
-      ctx.beginPath();
-      ctx.arc(pt.x,pt.y,1.5,0,Math.PI*2);
-      ctx.fillStyle=`rgba(255,255,255,${pt.life})`;
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(pt.x,pt.y,1.5,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${pt.life})`; ctx.fill();
       pt.life*=0.88;
     });
-
-    ctx.beginPath();
-    ctx.arc(s.x,s.y,2.5,0,Math.PI*2);
-    ctx.fillStyle="white";
-    ctx.fill();
-
+    ctx.beginPath(); ctx.arc(s.x,s.y,2.5,0,Math.PI*2); ctx.fillStyle="white"; ctx.fill();
     s.x+=s.dx;s.y+=s.dy;
-    if(s.x<-100||s.x>canvas.width+100||s.y>canvas.height+100){
-      stars.splice(i,1);
-    }
+    if(s.x<-100||s.x>canvas.width+100||s.y>canvas.height+100){stars.splice(i,1);}
   });
 
   requestAnimationFrame(animate);
@@ -292,4 +252,4 @@ function animate(){
 animate();
 </script>
 </body>
-  </html>
+</html>
