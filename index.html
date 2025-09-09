@@ -254,14 +254,14 @@ function animate(){
   // shooting stars
   shootingStars.forEach((s,i)=>{
     s.trail.unshift({x:s.x,y:s.y,life:1});
-    if(s.trail.length>20) s.trail.pop();
+    if(s.trail.length>50) s.trail.pop(); // 🔹 longer trail
 
     // draw star head
     drawStar(ctx,s.x,s.y,s.r,s.color);
 
-    // draw trail (bigger now)
+    // draw trail (normal size, just long)
     s.trail.forEach((pt,ti)=>{
-      drawStar(ctx, pt.x, pt.y, s.r * (1.5 - ti/20), s.color); // bigger trail
+      drawStar(ctx, pt.x, pt.y, s.r * 0.6, s.color);
       pt.life -= 0.05;
     });
 
@@ -326,4 +326,4 @@ document.addEventListener("click", e=>{
 });
 </script>
 </body>
-</html>
+  </html>
