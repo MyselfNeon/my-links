@@ -38,12 +38,20 @@
       z-index: 0;
     }
 
+    #ripple-layer {
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      pointer-events:none;
+      z-index: 1;
+    }
+
     .container {
       width:100%;
       max-width: var(--container-max);
       text-align:center;
       position: relative;
-      z-index: 2;
+      z-index: 3;
     }
 
     .avatar {
@@ -83,7 +91,11 @@
     .row .btn { flex: 1; min-width:0; }
 
     /* Gradients */
-    @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}}
+    @keyframes gradientShift { 
+      0%{background-position:0% 50%} 
+      50%{background-position:100% 50%} 
+      100%{background-position:0% 50%}
+    }
     .telegram { background:linear-gradient(90deg,#2ea8f5,#0077b6,#005f99);background-size:200% 200%;animation:gradientShift 6s infinite;}
     .github { background:linear-gradient(90deg,#42464d,#22272b,#0b0b0b);background-size:200% 200%;animation:gradientShift 8s infinite;}
     .instagram { background:linear-gradient(45deg,#feda75,#d62976,#962fbf,#4f5bd5);background-size:200% 200%;animation:gradientShift 5s infinite;}
@@ -96,8 +108,7 @@
       width: 120px;
       height: 120px;
       pointer-events: none;
-      z-index: 3;
-      animation: ripple-wave 1.8s ease-out forwards;
+      animation: ripple-wave 2s ease-out forwards;
     }
 
     /* Outlined for buttons */
@@ -109,8 +120,8 @@
 
     /* Neon glow for background */
     .ripple.neon {
-      background: rgba(255,255,255,0.3);
-      box-shadow: 0 0 25px rgba(0,200,255,0.8), 0 0 45px rgba(150,0,255,0.6);
+      background: rgba(255,255,255,0.15);
+      box-shadow: 0 0 18px rgba(0,200,255,0.8), 0 0 35px rgba(150,0,255,0.6);
       opacity: 0.7;
       transform: scale(0.2);
     }
@@ -121,10 +132,42 @@
         opacity: 0;
       }
     }
+
+    /* Heartbeat pulse (center) */
+    .heart {
+      position: fixed;
+      top: 50%; left: 50%;
+      width: 80px; height: 80px;
+      transform: translate(-50%,-50%) rotate(-45deg) scale(0.3);
+      background: radial-gradient(circle at 30% 30%, #ff4d6d, #ff1a4d);
+      animation: heartbeat 8s infinite;
+      opacity: 0;
+      z-index: 1;
+    }
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: inherit;
+    }
+    .heart::before { top: -40px; left: 0; }
+    .heart::after { left: 40px; top: 0; }
+
+    @keyframes heartbeat {
+      0%, 70%, 100% { transform: translate(-50%,-50%) rotate(-45deg) scale(0.3); opacity: 0; }
+      5% { transform: translate(-50%,-50%) rotate(-45deg) scale(1); opacity: 0.8; }
+      15% { transform: translate(-50%,-50%) rotate(-45deg) scale(0.8); opacity: 0.6; }
+      30% { transform: translate(-50%,-50%) rotate(-45deg) scale(1.2); opacity: 0.4; }
+      50% { transform: translate(-50%,-50%) rotate(-45deg) scale(1.5); opacity: 0; }
+    }
   </style>
 </head>
 <body>
   <canvas id="particles"></canvas>
+  <div id="ripple-layer"></div>
+  <div class="heart"></div>
 
   <div class="container">
     <img class="avatar" src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Neon avatar">
@@ -183,29 +226,17 @@
             ripple.classList.add("ripple","neon");
             ripple.style.left = (e.pageX - 60) + "px";
             ripple.style.top = (e.pageY - 60) + "px";
-            document.body.appendChild(ripple);
+            document.getElementById("ripple-layer").appendChild(ripple);
             ripple.addEventListener("animationend", () => ripple.remove());
           }, i * 300);
         }
       }
     });
 
-    /* Ambient pulse every 10s */
-    setInterval(() => {
-      const x = Math.random() * window.innerWidth;
-      const y = Math.random() * window.innerHeight;
-      const ripple = document.createElement("span");
-      ripple.classList.add("ripple","neon");
-      ripple.style.left = (x - 60) + "px";
-      ripple.style.top = (y - 60) + "px";
-      document.body.appendChild(ripple);
-      ripple.addEventListener("animationend", () => ripple.remove());
-    }, 10000);
-
-    /* Particles + falling stars */
+    /* Particles + stars */
     const canvas = document.getElementById("particles");
     const ctx = canvas.getContext("2d");
-    let particles = [], stars = [];
+    let particles = [], stars = [], twinkles = [];
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -214,7 +245,8 @@
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
-    for (let i = 0; i < 35; i++) {
+    // floating particles
+    for (let i = 0; i < 30; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -224,14 +256,26 @@
       });
     }
 
+    // twinkling stars
+    for (let i = 0; i < 60; i++) {
+      twinkles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.5,
+        alpha: Math.random(),
+        da: (Math.random() * 0.02) + 0.01
+      });
+    }
+
+    // shooting stars
     function spawnStar() {
       const side = Math.random() > 0.5 ? "left" : "right";
       stars.push({
         x: side === "left" ? -10 : canvas.width + 10,
         y: Math.random() * canvas.height * 0.3,
-        dx: side === "left" ? 2 : -2,
-        dy: 2,
-        len: Math.random() * 50 + 40
+        dx: side === "left" ? 4 : -4,
+        dy: 3,
+        trail: []
       });
       setTimeout(spawnStar, Math.random() * 3000 + 2000);
     }
@@ -240,6 +284,7 @@
     function animate() {
       ctx.clearRect(0,0,canvas.width,canvas.height);
 
+      // background particles
       ctx.fillStyle = "rgba(255,255,255,0.7)";
       particles.forEach(p=>{
         ctx.beginPath();
@@ -250,13 +295,36 @@
         if(p.y<0||p.y>canvas.height) p.dy*=-1;
       });
 
-      stars.forEach((s,i)=>{
-        ctx.strokeStyle="rgba(255,255,255,0.8)";
-        ctx.lineWidth=2;
+      // twinkling stars
+      twinkles.forEach(t=>{
         ctx.beginPath();
-        ctx.moveTo(s.x,s.y);
-        ctx.lineTo(s.x - s.dx*s.len, s.y - s.dy*s.len);
-        ctx.stroke();
+        ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,255,${t.alpha})`;
+        ctx.fill();
+        t.alpha += t.da;
+        if(t.alpha > 1 || t.alpha < 0){ t.da *= -1; }
+      });
+
+      // shooting stars with sparkling trails
+      stars.forEach((s,i)=>{
+        // add trail point
+        s.trail.unshift({x:s.x,y:s.y,life:1});
+        if(s.trail.length>25) s.trail.pop();
+
+        // draw trail as sparkles
+        s.trail.forEach((pt,j)=>{
+          ctx.beginPath();
+          ctx.arc(pt.x,pt.y,1.5,0,Math.PI*2);
+          ctx.fillStyle=`rgba(255,255,255,${pt.life})`;
+          ctx.fill();
+          pt.life *= 0.92;
+        });
+
+        // draw head
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,2.5,0,Math.PI*2);
+        ctx.fillStyle="white";
+        ctx.fill();
 
         s.x += s.dx; s.y += s.dy;
         if(s.x < -100 || s.x > canvas.width+100 || s.y > canvas.height+100){
