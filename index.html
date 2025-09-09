@@ -130,94 +130,100 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 
 <a class="btn telegram full" href="https://t.me/MyselfNeon" target="_blank"><i class="fab fa-telegram-plane"></i>Telegram</a>
 <a class="btn github full" href="https://github.com/MyselfNeon" target="_blank"><i class="fab fa-github"></i>GitHub</a>
+
 <div class="row">
   <a class="btn instagram" href="https://instagram.com/" target="_blank"><i class="fab fa-instagram"></i>Instagram</a>
   <a class="btn facebook" href="https://facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i>Facebook</a>
+</div>
+<div class="row">
   <a class="btn discord" href="https://discord.com/" target="_blank"><i class="fab fa-discord"></i>Discord</a>
   <a class="btn platinmods" href="https://platinmods.com/" target="_blank"><i class="fas fa-gem"></i>Platinmods</a>
 </div>
 </div>
 
 <script>
-// Button ripple (click)
+// Ripple effect with unique styles per button
+function createRipple(x, y, color, scale, opacity){
+  const ripple = document.createElement("span");
+  ripple.classList.add("ripple");
+  ripple.style.left = (x-60)+"px";
+  ripple.style.top = (y-60)+"px";
+  ripple.style.background = color || "rgba(255,255,255,0.15)";
+  ripple.style.transform = `scale(${scale||0.2})`;
+  ripple.style.opacity = opacity||0.7;
+  document.getElementById("ripple-layer").appendChild(ripple);
+  ripple.addEventListener("animationend", ()=>ripple.remove());
+}
+
+// Button click ripple with different effects
 document.querySelectorAll(".btn").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
-    const rect=btn.getBoundingClientRect();
-    const x=e.clientX-rect.left;
-    const y=e.clientY-rect.top;
-    for(let i=0;i<3;i++){
-      setTimeout(()=>{
-        const ripple=document.createElement("span");
-        ripple.classList.add("ripple","outline");
-        ripple.style.left=(rect.left+x-60)+"px";
-        ripple.style.top=(rect.top+y-60)+"px";
-        ripple.style.color=getComputedStyle(btn).color;
-        document.body.appendChild(ripple);
-        ripple.addEventListener("animationend",()=>ripple.remove());
-      },i*250);
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    let color = "rgba(255,255,255,0.15)", scale=0.2, opacity=0.7;
+
+    if(btn.classList.contains("telegram")){
+      color="rgba(56,189,248,0.3)"; scale=0.3;
+    } else if(btn.classList.contains("github")){
+      color="rgba(0,0,0,0.3)"; scale=0.4;
+    } else if(btn.classList.contains("instagram")){
+      color="rgba(236,72,153,0.3)"; scale=0.25;
+    } else if(btn.classList.contains("facebook")){
+      color="rgba(59,130,246,0.3)"; scale=0.25;
+    } else if(btn.classList.contains("discord")){
+      color="rgba(114,137,218,0.3)"; scale=0.3;
+    } else if(btn.classList.contains("platinmods")){
+      color="rgba(191,90,242,0.3)"; scale=0.35;
     }
-    setTimeout(()=>window.open(btn.href,"_blank"),600);
+
+    for(let i=0;i<3;i++){
+      setTimeout(()=>createRipple(x, y, color, scale, opacity), i*150);
+    }
+
+    setTimeout(()=>window.open(btn.href,"_blank"),450);
   });
 });
 
-// Background ripple / repel effect
-document.addEventListener("click", e => {
-  if (!e.target.closest(".btn")) {
-    for (let i = 0; i < 2; i++) {
-      setTimeout(() => {
-        const ripple = document.createElement("span");
-        ripple.classList.add("ripple", "neon");
-        ripple.style.left = (e.pageX - 60) + "px";
-        ripple.style.top = (e.pageY - 60) + "px";
-        document.getElementById("ripple-layer").appendChild(ripple);
-        ripple.addEventListener("animationend", () => ripple.remove());
-      }, i * 300);
+// Background ripple
+document.addEventListener("click", e=>{
+  if(!e.target.closest(".btn")){
+    for(let i=0;i<2;i++){
+      setTimeout(()=>createRipple(e.pageX, e.pageY), i*250);
     }
   }
 });
 
 // Particles + colorful stars
-const canvas=document.getElementById("particles");
-const ctx=canvas.getContext("2d");
-let particles=[],stars=[],twinkles=[];
-function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
-window.addEventListener("resize",resizeCanvas);
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+let particles=[], stars=[], twinkles=[];
+function resizeCanvas(){canvas.width=window.innerWidth; canvas.height=window.innerHeight;}
+window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
 // Floating particles
 for(let i=0;i<40;i++){
-  particles.push({
-    x:Math.random()*canvas.width,
-    y:Math.random()*canvas.height,
-    r:Math.random()*2+1,
-    dx:(Math.random()-0.5)*0.3,
-    dy:(Math.random()-0.5)*0.3
-  });
+  particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.3, dy:(Math.random()-0.5)*0.3});
 }
 
 // Twinkling stars
 for(let i=0;i<80;i++){
-  twinkles.push({
-    x:Math.random()*canvas.width,
-    y:Math.random()*canvas.height,
-    r:Math.random()*1.5+0.5,
-    alpha:Math.random(),
-    da:(Math.random()*0.02)+0.005,
-    color:`hsl(${Math.random()*360},80%,70%)`
-  });
+  twinkles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.5+0.5, alpha:Math.random(), da:(Math.random()*0.02)+0.005});
 }
 
-// Shooting stars
+// Shooting stars with colorful trails
 function spawnStar(){
-  const side=Math.random()>0.5?"left":"right";
+  const side = Math.random()>0.5?"left":"right";
   stars.push({
     x:side==="left"?-10:canvas.width+10,
     y:Math.random()*canvas.height*0.3,
     dx:(Math.random()*2+1)*(side==="left"?1:-1),
     dy:Math.random()*1.5+0.5,
     trail:[],
-    color:`hsl(${Math.random()*360},100%,70%)`
+    color:`hsl(${Math.random()*360},100%,70%)`,
+    trailLength: Math.floor(Math.random()*30+20)
   });
   setTimeout(spawnStar, Math.random()*2000+1000);
 }
@@ -229,8 +235,7 @@ function animate(){
   // Particles
   particles.forEach(p=>{
     ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle="rgba(255,255,255,0.7)";
-    ctx.fill();
+    ctx.fillStyle="rgba(255,255,255,0.7)"; ctx.fill();
     p.x+=p.dx; p.y+=p.dy;
     if(p.x<0||p.x>canvas.width)p.dx*=-1;
     if(p.y<0||p.y>canvas.height)p.dy*=-1;
@@ -239,24 +244,23 @@ function animate(){
   // Twinkles
   twinkles.forEach(t=>{
     ctx.beginPath(); ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${t.alpha})`;
+    ctx.fillStyle=`hsla(${Math.random()*360},100%,70%,${t.alpha})`;
     ctx.fill();
-    t.alpha+=t.da; if(t.alpha>1||t.alpha<0)t.da*=-1;
+    t.alpha += t.da; if(t.alpha>1||t.alpha<0) t.da*=-1;
   });
 
-  // Shooting stars with trails
+  // Shooting stars
   stars.forEach((s,i)=>{
     s.trail.unshift({x:s.x,y:s.y,life:1});
-    if(s.trail.length>25)s.trail.pop();
+    if(s.trail.length>s.trailLength) s.trail.pop();
     s.trail.forEach(pt=>{
       ctx.beginPath();
-      ctx.arc(pt.x+Math.random()*2-1,pt.y+Math.random()*2-1,1.5,0,Math.PI*2);
+      ctx.arc(pt.x+Math.random()*2-1, pt.y+Math.random()*2-1, 1.5, 0, Math.PI*2);
       ctx.fillStyle=`hsla(${Math.random()*360},100%,70%,${pt.life})`;
       ctx.fill();
     });
     ctx.beginPath(); ctx.arc(s.x,s.y,2.5,0,Math.PI*2);
-    ctx.fillStyle=s.color;
-    ctx.fill();
+    ctx.fillStyle=s.color; ctx.fill();
     s.x+=s.dx; s.y+=s.dy;
     if(s.x<-100||s.x>canvas.width+100||s.y>canvas.height+100){stars.splice(i,1);}
   });
