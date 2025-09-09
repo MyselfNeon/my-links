@@ -49,7 +49,7 @@ body {
 }
 
 h1 { margin:10px 0; font-size:22px; }
-p.lead { margin:10px 0 26px; color:#00ff00; font-size:14px; }
+p.lead { margin:10px 0 26px; color:#00ff88; font-size:14px; font-weight:600; }
 
 .btn {
   display:flex;
@@ -67,6 +67,7 @@ p.lead { margin:10px 0 26px; color:#00ff00; font-size:14px; }
   overflow: hidden;
   z-index: 0;
   box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+  transition: transform 0.2s ease;
 }
 .btn::before {
   content:'';
@@ -132,18 +133,18 @@ p.lead { margin:10px 0 26px; color:#00ff00; font-size:14px; }
 <a class="btn github full" href="https://github.com/MyselfNeon" target="_blank"><i class="fab fa-github"></i>GitHub</a>
 
 <div class="row">
-  <a class="btn instagram" href="https://instagram.com/neon.an_/" target="_blank"><i class="fab fa-instagram"></i>Instagram</a>
-  <a class="btn facebook" href="https://m.facebook.com/anurag.nandan.370/" target="_blank"><i class="fab fa-facebook-f"></i>Facebook</a>
+  <a class="btn instagram" href="https://instagram.com/" target="_blank"><i class="fab fa-instagram"></i>Instagram</a>
+  <a class="btn facebook" href="https://facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i>Facebook</a>
 </div>
 
 <div class="row">
-  <a class="btn discord" href="https://discord.com/users/963775868184969259" target="_blank"><i class="fab fa-discord"></i>Discord</a>
-  <a class="btn platinmods" href="https://platinmods.com/members/neon-an.3695277/" target="_blank"><i class="fab fa-chrome"></i>Platinmods</a>
+  <a class="btn discord" href="https://discord.com/" target="_blank"><i class="fab fa-discord"></i>Discord</a>
+  <a class="btn chrome" href="https://platinmods.com/" target="_blank"><i class="fab fa-chrome"></i>Platinmods</a>
 </div>
 </div>
 
 <script>
-// Button ripple + repel effect
+// Ripple repel effect on buttons
 document.querySelectorAll(".btn").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
@@ -165,7 +166,7 @@ document.querySelectorAll(".btn").forEach(btn=>{
   });
 });
 
-// Background ripple
+// Background ripple repel on clicks
 document.addEventListener("click", e=>{
   if(!e.target.closest(".btn")){
     for(let i=0;i<2;i++){
@@ -181,102 +182,112 @@ document.addEventListener("click", e=>{
   }
 });
 
-// Particles + colorful stars
+// Particles + stars + glitter + fireworks
 const canvas=document.getElementById("particles");
 const ctx=canvas.getContext("2d");
-let particles=[],stars=[],twinkles=[],fireworks=[];
+let particles=[],stars=[],twinkles=[],glitters=[],fireworks=[];
 function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
 window.addEventListener("resize",resizeCanvas);
 resizeCanvas();
 
-// Floating background particles
-for(let i=0;i<30;i++){
-  particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.3,dy:(Math.random()-0.5)*0.3});
-}
+// Floating particles
+for(let i=0;i<25;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.3,dy:(Math.random()-0.5)*0.3});}
 
-// Twinkles
-for(let i=0;i<60;i++){
-  twinkles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,alpha:Math.random(),da:(Math.random()*0.02)+0.005});
-}
+// Twinkling stars (fewer now)
+for(let i=0;i<20;i++){twinkles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,alpha:Math.random(),da:(Math.random()*0.02)+0.005});}
 
-// Shooting stars
+// Shooting stars with colorful trails
 function spawnStar(){
-  stars.push({
-    x:Math.random()>0.5?-10:canvas.width+10,
-    y:Math.random()*canvas.height*0.3,
-    dx: 1 + Math.random()*2,
-    dy: 0.5 + Math.random()*1,
-    color: `hsl(${Math.random()*360}, 80%, 70%)`,
-    trail:[]
-  });
-  setTimeout(spawnStar, Math.random()*3000+2000);
+  const side=Math.random()>0.5?"left":"right";
+  stars.push({x:side==="left"?-10:canvas.width+10,y:Math.random()*canvas.height*0.3,dx:(Math.random()*1.5)+1,dy:(Math.random()*1.5)+0.8,trail:[],color:`hsl(${Math.random()*360},100%,70%)`});
+  setTimeout(spawnStar, Math.random()*3000+3000);
 }
 spawnStar();
 
+// Glitter particles (slow falling)
+for(let i=0;i<50;i++){
+  glitters.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*1.2+0.4,
+    dy:Math.random()*0.3+0.1,
+    alpha:Math.random()
+  });
+}
+
 // Fireworks
 function spawnFirework(){
-  const x = Math.random()*canvas.width*0.8 + canvas.width*0.1;
-  const y = Math.random()*canvas.height*0.3 + 50;
-  const color = `hsl(${Math.random()*360},90%,60%)`;
-  for(let i=0;i<25;i++){
-    const angle = (Math.PI*2*i)/25;
-    fireworks.push({
-      x,y,
-      dx: Math.cos(angle)*2*(0.5+Math.random()),
-      dy: Math.sin(angle)*2*(0.5+Math.random()),
-      life: 60,
-      color
-    });
+  const x=Math.random()*canvas.width;
+  const y=Math.random()*canvas.height*0.5;
+  const sparks=[];
+  const color=`hsl(${Math.random()*360},100%,60%)`;
+  for(let i=0;i<30;i++){
+    const angle=Math.random()*2*Math.PI;
+    const speed=Math.random()*3+1;
+    sparks.push({x,y,dx:Math.cos(angle)*speed,dy:Math.sin(angle)*speed,life:1,color});
   }
-  setTimeout(spawnFirework, 5000 + Math.random()*3000);
+  fireworks.push({sparks});
+  setTimeout(spawnFirework, Math.random()*3000+5000);
 }
 spawnFirework();
 
+// Animate everything
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  // particles
+
+  // floating dots
   particles.forEach(p=>{
     ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle="rgba(255,255,255,0.7)";
-    ctx.fill();
+    ctx.fillStyle="rgba(255,255,255,0.7)"; ctx.fill();
     p.x+=p.dx; p.y+=p.dy;
     if(p.x<0||p.x>canvas.width)p.dx*=-1;
     if(p.y<0||p.y>canvas.height)p.dy*=-1;
   });
+
   // twinkles
   twinkles.forEach(t=>{
     ctx.beginPath(); ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,255,255,${t.alpha})`;
-    ctx.fill();
+    ctx.fillStyle=`rgba(255,255,255,${t.alpha})`; ctx.fill();
     t.alpha+=t.da; if(t.alpha>1||t.alpha<0)t.da*=-1;
   });
-  // stars
+
+  // shooting stars
   stars.forEach((s,i)=>{
-    s.trail.unshift({x:s.x,y:s.y});
-    if(s.trail.length>20)s.trail.pop();
+    s.trail.unshift({x:s.x,y:s.y,life:1});
+    if(s.trail.length>25)s.trail.pop();
     s.trail.forEach(pt=>{
+      pt.life-=0.04;
       ctx.beginPath();
       ctx.arc(pt.x,pt.y,1.5,0,Math.PI*2);
-      ctx.fillStyle=s.color;
+      ctx.fillStyle=`${s.color.replace(")",`,${pt.life})`).replace("hsl","hsla")}`;
       ctx.fill();
     });
-    ctx.beginPath();
-    ctx.arc(s.x,s.y,2.5,0,Math.PI*2);
-    ctx.fillStyle=s.color;
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(s.x,s.y,2.5,0,Math.PI*2); ctx.fillStyle=s.color; ctx.fill();
     s.x+=s.dx; s.y+=s.dy;
     if(s.x<-100||s.x>canvas.width+100||s.y>canvas.height+100){stars.splice(i,1);}
   });
-  // fireworks
-  fireworks.forEach((f,i)=>{
-    ctx.beginPath();
-    ctx.arc(f.x,f.y,2.5,0,Math.PI*2);
-    ctx.fillStyle=f.color;
-    ctx.fill();
-    f.x+=f.dx; f.y+=f.dy;
-    f.dy+=0.03; f.life--;
-    if(f.life<=0)fireworks.splice(i,1);
+
+  // glitter
+  glitters.forEach(g=>{
+    ctx.beginPath(); ctx.arc(g.x,g.y,g.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${g.alpha})`; ctx.fill();
+    g.y+=g.dy; if(g.y>canvas.height)g.y=0;
   });
+
+  // fireworks
+  fireworks.forEach((fw,i)=>{
+    fw.sparks.forEach(sp=>{
+      ctx.beginPath();
+      ctx.arc(sp.x,sp.y,2,0,Math.PI*2);
+      ctx.fillStyle=`${sp.color.replace(")",`,${sp.life})`).replace("hsl","hsla")}`;
+      ctx.fill();
+      sp.x+=sp.dx; sp.y+=sp.dy; sp.dy+=0.02;
+      sp.life-=0.02;
+    });
+    fw.sparks=fw.sparks.filter(sp=>sp.life>0);
+    if(fw.sparks.length===0)fireworks.splice(i,1);
+  });
+
   requestAnimationFrame(animate);
 }
 animate();
