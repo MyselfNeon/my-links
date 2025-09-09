@@ -254,7 +254,7 @@ function animate(){
   // shooting stars
   shootingStars.forEach((s,i)=>{
     s.trail.unshift({x:s.x,y:s.y,life:1});
-    if(s.trail.length>20)s.trail.pop();
+    if(s.trail.length>40)s.trail.pop();
     // draw star head
     drawStar(ctx,s.x,s.y,s.r,s.color);
     // draw trail
