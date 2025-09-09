@@ -254,16 +254,20 @@ function animate(){
   // shooting stars
   shootingStars.forEach((s,i)=>{
     s.trail.unshift({x:s.x,y:s.y,life:1});
-    if(s.trail.length>20)s.trail.pop();
+    if(s.trail.length>20) s.trail.pop();
+
     // draw star head
     drawStar(ctx,s.x,s.y,s.r,s.color);
-    // draw trail
+
+    // draw trail (bigger now)
     s.trail.forEach((pt,ti)=>{
-      drawStar(ctx,pt.x,pt.y,s.r*(0.6-ti/25),s.color);
-      pt.life-=0.05;
+      drawStar(ctx, pt.x, pt.y, s.r * (1.5 - ti/20), s.color); // bigger trail
+      pt.life -= 0.05;
     });
-    s.x+=s.dx; s.y+=s.dy;
-    if(s.x>canvas.width+100||s.y>canvas.height+100) shootingStars.splice(i,1);
+
+    s.x += s.dx; 
+    s.y += s.dy;
+    if(s.x > canvas.width+100 || s.y > canvas.height+100) shootingStars.splice(i,1);
   });
 
   // fireworks
@@ -322,4 +326,4 @@ document.addEventListener("click", e=>{
 });
 </script>
 </body>
-  </html>
+</html>
