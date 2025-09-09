@@ -170,35 +170,22 @@ spawnGlitter();
 
 // ================== Shooting Stars ==================
 let shootingStars=[];
-function drawStar(ctx,x,y,r,color){
-  ctx.save();
-  ctx.beginPath();
-  ctx.translate(x,y);
-  ctx.moveTo(0,-r);
-  for(let i=0;i<5;i++){
-    ctx.rotate(Math.PI/5);
-    ctx.lineTo(0,-r*0.5);
-    ctx.rotate(Math.PI/5);
-    ctx.lineTo(0,-r);
-  }
-  ctx.fillStyle=color;
-  ctx.shadowBlur=10; ctx.shadowColor=color;
-  ctx.fill();
-  ctx.restore();
-}
+
 function spawnShootingStar(){
-  const colors=["#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e"];
-  const color=colors[Math.floor(Math.random()*colors.length)];
+  const colors = ["#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e"];
+  const color = colors[Math.floor(Math.random()*colors.length)];
+  const startX = -50; // start offscreen
+  const startY = Math.random() * canvas.height * 0.3; // near top
   shootingStars.push({
-    x:Math.random()*canvas.width*0.7,
-    y:Math.random()*canvas.height*0.3,
-    dx:2+Math.random()*1,
-    dy:1+Math.random()*1,
-    r:6,
-    color:color,
-    trail:[]
+    x: startX,
+    y: startY,
+    dx: 3 + Math.random() * 1,
+    dy: 1 + Math.random() * 0.5,
+    r: 6,
+    color: color,
+    trail: []
   });
-  setTimeout(spawnShootingStar,4000+Math.random()*4000);
+  setTimeout(spawnShootingStar, 4000 + Math.random() * 4000);
 }
 spawnShootingStar();
 
@@ -253,20 +240,27 @@ function animate(){
 
   // shooting stars
   shootingStars.forEach((s,i)=>{
-    s.trail.unshift({x:s.x,y:s.y,life:1});
-    if(s.trail.length>50) s.trail.pop(); // 🔹 longer trail
+    s.trail.unshift({x:s.x, y:s.y, life:1});
+    if(s.trail.length > 50) s.trail.pop(); // long trail
 
-    // draw star head
-    drawStar(ctx,s.x,s.y,s.r,s.color);
+    // draw head
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = s.color;
+    ctx.fill();
 
-    // draw trail (normal size, just long)
-    s.trail.forEach((pt,ti)=>{
-      drawStar(ctx, pt.x, pt.y, s.r * 0.6, s.color);
+    // draw trail as small circles
+    s.trail.forEach(pt=>{
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, s.r*0.4, 0, Math.PI*2);
+      ctx.fillStyle = s.color;
+      ctx.fill();
       pt.life -= 0.05;
     });
 
-    s.x += s.dx; 
+    s.x += s.dx;
     s.y += s.dy;
+
     if(s.x > canvas.width+100 || s.y > canvas.height+100) shootingStars.splice(i,1);
   });
 
@@ -326,4 +320,4 @@ document.addEventListener("click", e=>{
 });
 </script>
 </body>
-  </html>
+</html>
