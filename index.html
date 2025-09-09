@@ -1,440 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Neon's Links</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-  :root{
-    --container-w:420px;
-  }
-  html,body{
-    height:100%;
-    margin:0;
-  }
-  body {
-    margin:0;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background:linear-gradient(135deg,#0f172a,#1e293b);
-    color:#f8fafc;
-    display:flex;
-    justify-content:center;
-    padding:60px 16px;
-    min-height:100vh;
-    overflow:hidden;
-    position:relative;
-  }
+body {
+  margin:0;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:#f8fafc;
+  display:flex;
+  justify-content:center;
+  padding:60px 16px;
+  min-height:100vh;
+  overflow:hidden;
+  position:relative;
+}
 
-  #particles, #ripple-layer {
-    position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    pointer-events:none;
-    z-index:0;
-  }
-  #ripple-layer { z-index:1; }
+#particles, #ripple-layer {
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  pointer-events:none;
+  z-index:0;
+}
+#ripple-layer { z-index:1; }
 
-  .container {
-    width:100%;
-    max-width:var(--container-w);
-    text-align:center;
-    position: relative;
-    z-index:3;
-    margin-top: 28px;
-  }
+.container {
+  width:100%;
+  max-width:420px;
+  text-align:center;
+  position: relative;
+  z-index:3;
+  margin-top: 28px;
+}
 
-  .avatar {
-    width:120px;
-    height:120px;
-    border-radius:50%;
-    margin:0 auto 22px;
-    border:4px solid #38bdf8;
-    box-shadow:0 6px 22px rgba(56,189,248,0.18);
-    object-fit:cover;
-    display:block;
-  }
+.avatar {
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  margin:0 auto 22px;
+  border:4px solid #38bdf8;
+  box-shadow:0 6px 22px rgba(56,189,248,0.18);
+  object-fit:cover;
+  display:block;
+}
 
-  h1 { margin:10px 0; font-size:22px; }
-  p.lead { margin:10px 0 26px; color:#22c55e; font-size:14px; }
+h1 { margin:10px 0; font-size:22px; }
+p.lead { margin:10px 0 26px; color:#22c55e; font-size:14px; } /* hacker green */
 
-  .btn {
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    height: 56px;
-    text-decoration:none;
-    color:#fff;
-    font-weight:700;
-    font-size:15px;
-    border-radius: 12px;
-    border: 3px solid transparent;
-    position: relative;
-    overflow: hidden;
-    z-index: 0;
-    box-shadow: 0 6px 18px rgba(2,6,23,0.45);
-    transition: transform 0.2s ease;
-  }
-  .btn::before {
-    content:'';
-    position:absolute;
-    inset:0;
-    padding:3px;
-    border-radius:12px;
-    background:linear-gradient(90deg,#ff4d6d,#38bdf8,#facc15,#d946ef);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
-    z-index:-1;
-    animation: borderShift 5s linear infinite;
-  }
-  @keyframes borderShift{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-  }
+.btn {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  height: 56px;
+  text-decoration:none;
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+  border-radius: 12px;
+  border: 3px solid transparent;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+}
+.btn::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  padding:3px;
+  border-radius:12px;
+  background:linear-gradient(90deg,#ff4d6d,#38bdf8,#facc15,#d946ef);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  z-index:-1;
+  animation: borderShift 5s linear infinite;
+}
+@keyframes borderShift{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
 
-  .btn i { font-size:19px; margin-top:2px; }
-  .btn:hover { transform: translateY(-3px); }
+.btn i { font-size:19px; margin-top:2px; }
+.btn:hover { transform: translateY(-3px); }
 
-  .btn.full { width: 85%; margin: 14px auto; }
-  .row { width: 85%; margin: 14px auto; display:flex; gap:12px; }
-  .row .btn { flex:1; min-width:0; }
+.btn.full { width: 85%; margin: 14px auto; }
+.row { width: 85%; margin: 14px auto; display:flex; gap:12px; }
+.row .btn { flex:1; min-width:0; }
 
-  /* Ripple effects */
-  .ripple {
-    position: absolute;
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    pointer-events: none;
-    animation: ripple-wave 2s ease-out forwards;
-  }
-  .ripple.outline {
-    border: 3px solid currentColor;
-    opacity: 0.9;
-    transform: scale(0.3);
-  }
-  .ripple.neon {
-    background: rgba(255,255,255,0.15);
-    box-shadow: 0 0 18px rgba(0,200,255,0.8), 0 0 35px rgba(150,0,255,0.6);
-    opacity: 0.7;
-    transform: scale(0.2);
-  }
-  @keyframes ripple-wave { to { transform: scale(1.8); opacity:0; } }
-
-  /* tiny helper to keep canvas above background but below UI */
-  #particles { z-index: 0; }
-  #ripple-layer { z-index: 1; }
+/* Ripple effects */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  pointer-events: none;
+  animation: ripple-wave 2s ease-out forwards;
+}
+.ripple.outline {
+  border: 3px solid currentColor;
+  opacity: 0.9;
+  transform: scale(0.3);
+}
+.ripple.neon {
+  background: rgba(255,255,255,0.15);
+  box-shadow: 0 0 18px rgba(0,200,255,0.8), 0 0 35px rgba(150,0,255,0.6);
+  opacity: 0.7;
+  transform: scale(0.2);
+}
+@keyframes ripple-wave { to { transform: scale(1.8); opacity:0; } }
 </style>
 </head>
 <body>
-  <canvas id="particles"></canvas>
-  <div id="ripple-layer"></div>
+<canvas id="particles"></canvas>
+<div id="ripple-layer"></div>
 
-  <div class="container">
-    <img class="avatar" src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Neon avatar">
-    <h1>MyselfNeon</h1>
-    <p class="lead">🚀 Dev | 📚 Student | 💡 Exploring Tech</p>
+<div class="container">
+<img class="avatar" src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Neon avatar">
+<h1>MyselfNeon</h1>
+<p class="lead">🚀 Dev | 📚 Student | 💡 Exploring Tech</p>
 
-    <a class="btn telegram full" href="https://t.me/MyselfNeon" target="_blank"><i class="fab fa-telegram-plane"></i>Telegram</a>
-    <a class="btn github full" href="https://github.com/MyselfNeon" target="_blank"><i class="fab fa-github"></i>GitHub</a>
-
-    <div class="row">
-      <a class="btn instagram" href="https://instagram.com/" target="_blank"><i class="fab fa-instagram"></i>Instagram</a>
-      <a class="btn facebook" href="https://facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i>Facebook</a>
-    </div>
-
-    <div class="row">
-      <a class="btn discord" href="https://discord.com/" target="_blank"><i class="fab fa-discord"></i>Discord</a>
-      <a class="btn chrome" href="https://platinmods.com/" target="_blank"><i class="fab fa-chrome"></i>Platinmods</a>
-    </div>
-  </div>
+<a class="btn telegram full" href="https://t.me/MyselfNeon" target="_blank"><i class="fab fa-telegram-plane"></i>Telegram</a>
+<a class="btn github full" href="https://github.com/MyselfNeon" target="_blank"><i class="fab fa-github"></i>GitHub</a>
+<div class="row">
+  <a class="btn instagram" href="https://instagram.com/" target="_blank"><i class="fab fa-instagram"></i>Instagram</a>
+  <a class="btn facebook" href="https://facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i>Facebook</a>
+</div>
+<div class="row">
+  <a class="btn discord" href="https://discord.com/" target="_blank"><i class="fab fa-discord"></i>Discord</a>
+  <a class="btn chrome" href="https://platinmods.com/" target="_blank"><i class="fab fa-chrome"></i>Platinmods</a>
+</div>
+</div>
 
 <script>
-/* ---------- ripple (unchanged) ---------- */
-function createButtonRipples(btn, e) {
-  const rect = btn.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  for (let i = 0; i < 3; i++) {
-    setTimeout(() => {
-      const ripple = document.createElement("span");
-      ripple.classList.add("ripple", "outline");
-      ripple.style.left = (rect.left + x - 60) + "px";
-      ripple.style.top = (rect.top + y - 60) + "px";
-      ripple.style.color = getComputedStyle(btn).color;
-      document.body.appendChild(ripple);
-      ripple.addEventListener("animationend", () => ripple.remove());
-    }, i * 200);
-  }
-  setTimeout(() => window.open(btn.href, "_blank"), 500);
-}
-
+// Button ripple + repel effect
 document.querySelectorAll(".btn").forEach(btn=>{
-  btn.addEventListener("click", function(e){
+  btn.addEventListener("click", e=>{
     e.preventDefault();
-    createButtonRipples(this, e);
+    const rect=btn.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const y=e.clientY-rect.top;
+    for(let i=0;i<3;i++){
+      setTimeout(()=>{
+        const ripple=document.createElement("span");
+        ripple.classList.add("ripple","outline");
+        ripple.style.left=(rect.left+x-60)+"px";
+        ripple.style.top=(rect.top+y-60)+"px";
+        ripple.style.color=getComputedStyle(btn).color;
+        document.body.appendChild(ripple);
+        ripple.addEventListener("animationend",()=>ripple.remove());
+      },i*250);
+    }
+    setTimeout(()=>window.open(btn.href,"_blank"),600);
   });
 });
 
+// Background ripple (repel style)
 document.addEventListener("click", e=>{
-  if (!e.target.closest(".btn")) {
-    for (let i=0;i<2;i++){
+  if(!e.target.closest(".btn")){
+    for(let i=0;i<2;i++){
       setTimeout(()=>{
-        const ripple = document.createElement("span");
+        const ripple=document.createElement("span");
         ripple.classList.add("ripple","neon");
-        ripple.style.left = (e.pageX-60) + "px";
-        ripple.style.top = (e.pageY-60) + "px";
+        ripple.style.left=(e.pageX-60)+"px";
+        ripple.style.top=(e.pageY-60)+"px";
         document.getElementById("ripple-layer").appendChild(ripple);
-        ripple.addEventListener("animationend", ()=>ripple.remove());
-      }, i*250);
+        ripple.addEventListener("animationend",()=>ripple.remove());
+      },i*300);
     }
   }
 });
 
-/* ---------- canvas & animations ---------- */
-const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
-let W = innerWidth, H = innerHeight;
-function resize(){
-  W = innerWidth; H = innerHeight;
-  canvas.width = W; canvas.height = H;
-}
-window.addEventListener("resize", resize, {passive:true});
-resize();
+// Canvas setup
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+let particles=[],stars=[],twinkles=[],glitters=[],fireworks=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+window.addEventListener("resize",resizeCanvas);resizeCanvas();
 
-/* background floating dots */
-const particles = [];
-for (let i=0;i<30;i++){
-  particles.push({
-    x: Math.random()*W,
-    y: Math.random()*H,
-    r: Math.random()*2 + 0.8,
-    dx: (Math.random()-0.5)*0.3,
-    dy: (Math.random()-0.5)*0.3
-  });
-}
+// Floating particles
+for(let i=0;i<30;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.3,dy:(Math.random()-0.5)*0.3});}
 
-/* twinkles */
-const twinkles = [];
-for(let i=0;i<30;i++){
-  twinkles.push({
-    x: Math.random()*W,
-    y: Math.random()*H,
-    r: Math.random()*1.5 + 0.5,
-    alpha: Math.random(),
-    da: (Math.random()*0.02)+0.003
-  });
-}
+// Twinkling stars
+for(let i=0;i<20;i++){twinkles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,alpha:Math.random(),da:(Math.random()*0.02)+0.005});}
 
-/* glitters (slow falling) */
-const glitters = [];
-setInterval(()=>{
-  glitters.push({x: Math.random()*W, y:-5, r: Math.random()*2+0.8, dy: Math.random()*0.4+0.1, alpha:1});
-}, 500);
+// Glitter slow falling
+for(let i=0;i<25;i++){glitters.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dy:Math.random()*0.3+0.1,alpha:Math.random()});}
 
-/* ---------- shooting stars as STAR + mosaic tail ---------- */
-const stars = [];
-
-function spawnStar(){
-  const side = Math.random() > 0.5 ? "left" : "right";
-  const speed = 1 + Math.random()*1.5; // moderate speed
-  const angle = (Math.random()*0.25 - 0.125); // slight vertical variance
-  const dx = side === "left" ? speed : -speed;
-  const dy = Math.tan(angle) * speed;
-  const size = 7 + Math.random()*4; // head star size (bigger)
-  stars.push({
-    x: side === "left" ? -20 : W + 20,
-    y: Math.random()*H*0.45 + H*0.05,
-    dx, dy,
-    size,
-    color: `hsl(${Math.random()*360}, 90%, 80%)`,
-    trail: [] // array of {x,y,life}
-  });
-  setTimeout(spawnStar, Math.random()*3000 + 3000);
-}
-spawnStar();
-
-/* draw a 5-point star centered (polygon) */
-function drawStarShape(ctx, cx, cy, outerR, innerR, points, fillStyle){
+// Shooting stars ⭐
+function drawStar(x,y,r,color){
   ctx.save();
   ctx.beginPath();
-  const step = Math.PI / points;
-  let rot = -Math.PI/2;
-  for(let i=0;i<2*points;i++){
-    const r = (i%2===0) ? outerR : innerR;
-    const x = cx + Math.cos(rot) * r;
-    const y = cy + Math.sin(rot) * r;
-    if(i===0) ctx.moveTo(x,y);
-    else ctx.lineTo(x,y);
-    rot += step;
+  ctx.translate(x,y);
+  ctx.moveTo(0,-r);
+  for(let i=0;i<5;i++){
+    ctx.rotate(Math.PI/5);
+    ctx.lineTo(0,-r*0.5);
+    ctx.rotate(Math.PI/5);
+    ctx.lineTo(0,-r);
   }
   ctx.closePath();
-  ctx.fillStyle = fillStyle;
+  ctx.fillStyle=color;
   ctx.fill();
   ctx.restore();
 }
-
-/* ---------- fireworks with glittering falling trails (kept) ---------- */
-const fireworks = [];
-function spawnFirework(){
-  const x = Math.random()*W;
-  const y = Math.random()*H;
-  const color = `hsl(${Math.random()*360}, 90%, 60%)`;
-  const sparks = [];
-  const count = 36;
-  for(let i=0;i<count;i++){
-    const angle = Math.random()*Math.PI*2;
-    const speed = Math.random()*3 + 0.8;
-    sparks.push({
-      x, y,
-      dx: Math.cos(angle)*speed,
-      dy: Math.sin(angle)*speed,
-      life: 1,
-      color,
-      trail: []
-    });
-  }
-  fireworks.push({sparks});
+function spawnStar(){
+  const colors=["#ffffff","#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e"];
+  const color=colors[Math.floor(Math.random()*colors.length)];
+  const side=Math.random()>0.5?"left":"right";
+  stars.push({x:side==="left"?-10:canvas.width+10,y:Math.random()*canvas.height*0.3,dx:Math.random()>0.5?-2:2,dy:1.5,trail:[],color});
+  setTimeout(spawnStar,Math.random()*4000+4000);
 }
-// fixed interval 4s
-setInterval(spawnFirework, 4000);
-spawnFirework(); // initial
+spawnStar();
 
-/* animate loop */
-function animate(){
-  ctx.clearRect(0,0,W,H);
-
-  // background particles
-  for(const p of particles){
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle = "rgba(255,255,255,0.65)";
-    ctx.fill();
-    p.x += p.dx; p.y += p.dy;
-    if(p.x < 0 || p.x > W) p.dx *= -1;
-    if(p.y < 0 || p.y > H) p.dy *= -1;
+// Fireworks
+function spawnFirework(){
+  const x=Math.random()*canvas.width;
+  const y=Math.random()*canvas.height*0.6;
+  const colors=["#ff4d6d","#38bdf8","#facc15","#22c55e","#d946ef"];
+  const color=colors[Math.floor(Math.random()*colors.length)];
+  let sparks=[];
+  for(let i=0;i<50;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=Math.random()*3+1;
+    sparks.push({x,y,dx:Math.cos(angle)*speed,dy:Math.sin(angle)*speed,life:1});
   }
+  fireworks.push({sparks,color});
+  setTimeout(spawnFirework,Math.random()*4000+4000);
+}
+spawnFirework();
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // particles
+  particles.forEach(p=>{
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle="rgba(255,255,255,0.7)"; ctx.fill();
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>canvas.width)p.dx*=-1;
+    if(p.y<0||p.y>canvas.height)p.dy*=-1;
+  });
 
   // twinkles
-  for(const t of twinkles){
-    ctx.beginPath();
-    ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
-    ctx.fillStyle = `rgba(255,255,255,${t.alpha})`;
-    ctx.fill();
-    t.alpha += t.da;
-    if(t.alpha > 1 || t.alpha < 0) t.da *= -1;
-  }
+  twinkles.forEach(t=>{
+    ctx.beginPath(); ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${t.alpha})`; ctx.fill();
+    t.alpha+=t.da; if(t.alpha>1||t.alpha<0)t.da*=-1;
+  });
 
-  // glitters (slow falling mosaic-like specks)
-  for(let i = glitters.length-1; i>=0; i--){
-    const g = glitters[i];
-    ctx.beginPath();
-    ctx.arc(g.x, g.y, g.r, 0, Math.PI*2);
-    ctx.fillStyle = `rgba(255,255,255,${Math.max(0, g.alpha)})`;
-    ctx.fill();
-    g.y += g.dy;
-    g.alpha -= 0.002;
-    if(g.y > H + 10 || g.alpha <= 0) glitters.splice(i,1);
-  }
+  // glitters
+  glitters.forEach(g=>{
+    ctx.beginPath(); ctx.arc(g.x,g.y,g.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${g.alpha})`; ctx.fill();
+    g.y+=g.dy; if(g.y>canvas.height)g.y=0;
+  });
 
-  // shooting stars (star head + mosaic tail)
-  for(let si = stars.length-1; si>=0; si--){
-    const s = stars[si];
+  // shooting stars ⭐ with mosaic trails
+  stars.forEach((s,i)=>{
+    s.trail.unshift({x:s.x,y:s.y,life:1});
+    if(s.trail.length>20)s.trail.pop();
 
-    // push onto trail
-    s.trail.unshift({x: s.x, y: s.y, life: 1});
-    if(s.trail.length > 28) s.trail.pop();
-
-    // draw mosaic/dotted tail: iterate trail and draw small rotated tiles that taper
-    for(let j=0; j<s.trail.length; j++){
-      const pt = s.trail[j];
-      const t = j / s.trail.length; // 0 at head, 1 at tail
-      const alpha = Math.max(0, 0.9 * (1 - t) );
-      const tileSize = Math.max(1, s.size * (1 - t) * 0.65);
-      // angle based on velocity to corner the tiles
-      const angle = Math.atan2(s.dy, s.dx);
+    s.trail.forEach((pt,idx)=>{
+      const size=8*(1-idx/s.trail.length);
       ctx.save();
-      ctx.translate(pt.x + (Math.random()-0.5)*1.2, pt.y + (Math.random()-0.5)*1.2);
-      ctx.rotate(angle + (Math.PI/4) * ((j%2)?0.2:-0.2)); // slight rotation pattern for mosaic feel
-      // mosaic: draw small rounded rects (not perfect rectangles)
-      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-      const w = tileSize;
-      const h = tileSize * (0.6 + Math.random()*0.4);
-      // irregular mosaic by using small triangles + rect combo
-      ctx.beginPath();
-      ctx.moveTo(-w/2, -h/2);
-      ctx.lineTo(w/2, -h/2 + (Math.random()-0.5)*2);
-      ctx.lineTo(w/2 + (Math.random()-0.5)*2, h/2);
-      ctx.lineTo(-w/2 + (Math.random()-0.5)*2, h/2 + (Math.random()-0.5)*1);
-      ctx.closePath();
-      ctx.fill();
+      ctx.translate(pt.x,pt.y);
+      ctx.rotate(Math.random()*Math.PI);
+      ctx.fillStyle=`${s.color}`;
+      ctx.globalAlpha=pt.life*(1-idx/s.trail.length);
+      ctx.fillRect(-size/2,-size/2,size,size);
       ctx.restore();
-    }
+    });
+    ctx.globalAlpha=1;
+    drawStar(s.x,s.y,6,s.color);
 
-    // draw star head (bigger, colored)
-    drawStarShape(ctx, s.x, s.y, s.size/2, s.size/4, 5, s.color);
+    s.x+=s.dx; s.y+=s.dy;
+    if(s.x<-100||s.x>canvas.width+100||s.y>canvas.height+100){stars.splice(i,1);}
+  });
 
-    // advance
-    s.x += s.dx;
-    s.y += s.dy;
-
-    // remove off-screen
-    if (s.x < -60 || s.x > W + 60 || s.y < -60 || s.y > H + 60) {
-      stars.splice(si, 1);
-    }
-  }
-
-  // fireworks: each spark leaves a long, slow glitter trail (we'll store small trailing points)
-  for(let fi = fireworks.length - 1; fi >= 0; fi--){
-    const fw = fireworks[fi];
-    for(let si = fw.sparks.length - 1; si >= 0; si--){
-      const sp = fw.sparks[si];
-      // push tiny trail points
-      if(!sp.trail) sp.trail = [];
-      sp.trail.unshift({x: sp.x, y: sp.y, life: sp.life});
-      if(sp.trail.length>20) sp.trail.pop();
-
-      // draw trail (longer glittering dots)
-      for(let k=0; k<sp.trail.length; k++){
-        const p = sp.trail[k];
-        const a = Math.max(0, p.life * (1 - k / sp.trail.length));
-        ctx.beginPath();
-        const rs = (1 + k*0.08);
-        ctx.arc(p.x, p.y, rs, 0, Math.PI*2);
-        ctx.fillStyle = sp.color.replace(")", `,${a})`).replace("hsl", "hsla");
-        ctx.fill();
-      }
-
-      // draw spark head
-      ctx.beginPath();
-      ctx.arc(sp.x, sp.y, 2.2, 0, Math.PI*2);
-      ctx.fillStyle = sp.color;
-      ctx.fill();
-
-      // physics
-      sp.x += sp.dx;
-      sp.y += sp.dy;
-      sp.dy += 0.03;       // gravity
-      sp.dx *= 0.995;     // slight drag
-      sp.dy *= 0.995;
-      sp.life -= 0.01;
-      if(sp.life <= 0) fw.sparks.splice(si,1);
-    }
-    if(fw.sparks.length === 0) fireworks.splice(fi,1);
-  }
+  // fireworks
+  fireworks.forEach((f,fi)=>{
+    f.sparks.forEach((sp,si)=>{
+      ctx.beginPath(); ctx.arc(sp.x,sp.y,2,0,Math.PI*2);
+      ctx.fillStyle=f.color; ctx.fill();
+      sp.x+=sp.dx; sp.y+=sp.dy;
+      sp.dy+=0.02; sp.life-=0.01;
+    });
+    f.sparks=f.sparks.filter(sp=>sp.life>0);
+    if(f.sparks.length===0)fireworks.splice(fi,1);
+  });
 
   requestAnimationFrame(animate);
 }
 animate();
-
-/* ---------- spawn more stars routine (keeps scene alive) ---------- */
-setInterval(()=>{
-  // spawn occasionally a star (lighter frequency)
-  if (Math.random() < 0.7) spawnStar();
-}, 1200);
 </script>
 </body>
-</html>
+  </html>
