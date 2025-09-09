@@ -51,7 +51,6 @@ body {
 h1 { margin:10px 0; font-size:22px; }
 p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 
-/* Buttons reverted to simple style */
 .btn {
   display:flex;
   align-items:center;
@@ -63,13 +62,33 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
   font-weight:700;
   font-size:15px;
   border-radius: 12px;
-  border: 2px solid rgba(255,255,255,0.15);
+  border: 3px solid transparent;
   position: relative;
   overflow: hidden;
   z-index: 0;
   box-shadow: 0 6px 18px rgba(2,6,23,0.45);
-  transition: transform .18s ease, box-shadow .18s ease;
 }
+.btn::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  padding:3px;
+  border-radius:12px;
+  background:linear-gradient(90deg,#ff4d6d,#38bdf8,#facc15,#d946ef);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  z-index:-1;
+  animation: borderShift 5s linear infinite;
+}
+@keyframes borderShift{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
 .btn i { font-size:19px; margin-top:2px; }
 .btn:hover { transform: translateY(-3px); }
 
