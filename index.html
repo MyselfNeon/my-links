@@ -26,11 +26,10 @@
       justify-content:center;
       padding:60px 16px;
       min-height:100vh;
-      overflow:hidden; /* to keep particles inside */
+      overflow:hidden;
       position: relative;
     }
 
-    /* Particles layer */
     #particles {
       position: fixed;
       top:0; left:0;
@@ -44,7 +43,7 @@
       max-width: var(--container-max);
       text-align:center;
       position: relative;
-      z-index: 2; /* over particles */
+      z-index: 2;
     }
 
     .avatar {
@@ -58,18 +57,9 @@
       display:block;
     }
 
-    h1 {
-      margin:10px 0;
-      font-size:22px;
-    }
+    h1 { margin:10px 0; font-size:22px; }
+    p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 
-    p.lead {
-      margin:10px 0 26px;
-      color:#94a3b8;
-      font-size:14px;
-    }
-
-    /* Buttons */
     .btn {
       display:flex;
       align-items:center;
@@ -84,75 +74,60 @@
       border: 2px solid rgba(255,255,255,0.15);
       box-shadow: 0 6px 18px rgba(2,6,23,0.45);
       transition: transform .18s ease, box-shadow .18s ease;
-      -webkit-tap-highlight-color: transparent;
     }
     .btn i { font-size:19px; margin-top:2px; }
     .btn:hover { transform: translateY(-3px); }
 
-    .btn.full {
-      width: var(--btn-width);
-      margin: 14px auto;
-    }
-
-    .row {
-      width: var(--btn-width);
-      margin: 14px auto;
-      display:flex;
-      gap: var(--gap);
-    }
+    .btn.full { width: var(--btn-width); margin: 14px auto; }
+    .row { width: var(--btn-width); margin: 14px auto; display:flex; gap: var(--gap); }
     .row .btn { flex: 1; min-width:0; }
 
-    /* Gradient backgrounds */
-    @keyframes gradientShift {
-      0%{ background-position: 0% 50%; }
-      50%{ background-position: 100% 50%; }
-      100%{ background-position: 0% 50%; }
-    }
-    .telegram {
-      background: linear-gradient(90deg,#2ea8f5,#0077b6,#005f99);
-      background-size:200% 200%; animation: gradientShift 6s ease infinite;
-    }
-    .github {
-      background: linear-gradient(90deg,#42464d,#22272b,#0b0b0b);
-      background-size:200% 200%; animation: gradientShift 8s ease infinite;
-    }
-    .instagram {
-      background: linear-gradient(45deg,#feda75,#d62976,#962fbf,#4f5bd5);
-      background-size:200% 200%; animation: gradientShift 5s ease infinite;
-    }
-    .facebook {
-      background: linear-gradient(90deg,#2d6df6,#1877f2,#1357d9);
-      background-size:200% 200%; animation: gradientShift 6s ease infinite;
-    }
+    /* Gradients */
+    @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}}
+    .telegram { background:linear-gradient(90deg,#2ea8f5,#0077b6,#005f99);background-size:200% 200%;animation:gradientShift 6s infinite;}
+    .github { background:linear-gradient(90deg,#42464d,#22272b,#0b0b0b);background-size:200% 200%;animation:gradientShift 8s infinite;}
+    .instagram { background:linear-gradient(45deg,#feda75,#d62976,#962fbf,#4f5bd5);background-size:200% 200%;animation:gradientShift 5s infinite;}
+    .facebook { background:linear-gradient(90deg,#2d6df6,#1877f2,#1357d9);background-size:200% 200%;animation:gradientShift 6s infinite;}
 
-    /* Ripple */
+    /* Ripple effects */
     .ripple {
       position: absolute;
       border-radius: 50%;
-      transform: scale(0);
-      opacity: 0.75;
+      width: 120px;
+      height: 120px;
       pointer-events: none;
       z-index: 3;
-      animation: ripple-animation 1.6s ease-out forwards;
-      filter: blur(6px);
-      box-shadow: 0 0 22px rgba(255,255,255,0.35);
+      animation: ripple-wave 1.8s ease-out forwards;
     }
 
-    @keyframes ripple-animation {
+    /* Outlined for buttons */
+    .ripple.outline {
+      border: 3px solid currentColor;
+      opacity: 0.9;
+      transform: scale(0.3);
+    }
+
+    /* Neon glow for background */
+    .ripple.neon {
+      background: rgba(255,255,255,0.3);
+      box-shadow: 0 0 25px rgba(0,200,255,0.8), 0 0 45px rgba(150,0,255,0.6);
+      opacity: 0.7;
+      transform: scale(0.2);
+    }
+
+    @keyframes ripple-wave {
       to {
-        transform: scale(4.8);
+        transform: scale(1.8);
         opacity: 0;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Particles background -->
   <canvas id="particles"></canvas>
 
   <div class="container">
     <img class="avatar" src="https://avatars.githubusercontent.com/u/9919?v=4" alt="Neon avatar">
-
     <h1>MyselfNeon</h1>
     <p class="lead">🚀 Dev | 📚 Student | 💡 Exploring Tech</p>
 
@@ -175,39 +150,62 @@
   </div>
 
   <script>
-    /* Ripple effect */
-    document.addEventListener("click", function(e) {
-      let rippleColor;
-      if (e.target.closest(".telegram")) {
-        rippleColor = "radial-gradient(circle, rgba(0,136,204,0.65) 0%, rgba(0,136,204,0.0) 70%)";
-      } else if (e.target.closest(".github")) {
-        rippleColor = "radial-gradient(circle, rgba(36,41,46,0.65) 0%, rgba(36,41,46,0.0) 70%)";
-      } else if (e.target.closest(".instagram")) {
-        rippleColor = "radial-gradient(circle, rgba(214,41,118,0.65) 0%, rgba(214,41,118,0.0) 70%)";
-      } else if (e.target.closest(".facebook")) {
-        rippleColor = "radial-gradient(circle, rgba(24,119,242,0.65) 0%, rgba(24,119,242,0.0) 70%)";
-      } else {
-        rippleColor = "radial-gradient(circle, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.0) 70%)";
-      }
+    /* Button ripple */
+    document.querySelectorAll(".btn").forEach(btn => {
+      btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-      for (let i = 0; i < 3; i++) {
-        setTimeout(() => {
-          const ripple = document.createElement("span");
-          ripple.classList.add("ripple");
-          ripple.style.width = ripple.style.height = "220px";
-          ripple.style.left = (e.pageX - 110) + "px";
-          ripple.style.top = (e.pageY - 110) + "px";
-          ripple.style.background = rippleColor;
-          document.body.appendChild(ripple);
-          ripple.addEventListener("animationend", () => ripple.remove());
-        }, i * 250);
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            const ripple = document.createElement("span");
+            ripple.classList.add("ripple","outline");
+            ripple.style.left = (rect.left + x - 60) + "px";
+            ripple.style.top = (rect.top + y - 60) + "px";
+            ripple.style.color = window.getComputedStyle(this).color;
+            document.body.appendChild(ripple);
+            ripple.addEventListener("animationend", () => ripple.remove());
+          }, i * 250);
+        }
+
+        setTimeout(()=> window.open(this.href,"_blank"), 600);
+      });
+    });
+
+    /* Background ripple */
+    document.addEventListener("click", function(e) {
+      if (!e.target.closest(".btn")) {
+        for (let i = 0; i < 2; i++) {
+          setTimeout(() => {
+            const ripple = document.createElement("span");
+            ripple.classList.add("ripple","neon");
+            ripple.style.left = (e.pageX - 60) + "px";
+            ripple.style.top = (e.pageY - 60) + "px";
+            document.body.appendChild(ripple);
+            ripple.addEventListener("animationend", () => ripple.remove());
+          }, i * 300);
+        }
       }
     });
 
-    /* Particles */
+    /* Ambient pulse every 10s */
+    setInterval(() => {
+      const x = Math.random() * window.innerWidth;
+      const y = Math.random() * window.innerHeight;
+      const ripple = document.createElement("span");
+      ripple.classList.add("ripple","neon");
+      ripple.style.left = (x - 60) + "px";
+      ripple.style.top = (y - 60) + "px";
+      document.body.appendChild(ripple);
+      ripple.addEventListener("animationend", () => ripple.remove());
+    }, 10000);
+
+    /* Particles + falling stars */
     const canvas = document.getElementById("particles");
     const ctx = canvas.getContext("2d");
-    let particles = [];
+    let particles = [], stars = [];
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -216,31 +214,59 @@
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
-    for (let i = 0; i < 35; i++) { // only a few particles
+    for (let i = 0; i < 35; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         r: Math.random() * 2 + 1,
-        dx: (Math.random() - 0.5) * 0.4,
-        dy: (Math.random() - 0.5) * 0.4,
+        dx: (Math.random() - 0.5) * 0.3,
+        dy: (Math.random() - 0.5) * 0.3
       });
     }
 
-    function animateParticles() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle = "rgba(255,255,255,0.7)";
-      particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-        ctx.fill();
-        p.x += p.dx;
-        p.y += p.dy;
-        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    function spawnStar() {
+      const side = Math.random() > 0.5 ? "left" : "right";
+      stars.push({
+        x: side === "left" ? -10 : canvas.width + 10,
+        y: Math.random() * canvas.height * 0.3,
+        dx: side === "left" ? 2 : -2,
+        dy: 2,
+        len: Math.random() * 50 + 40
       });
-      requestAnimationFrame(animateParticles);
+      setTimeout(spawnStar, Math.random() * 3000 + 2000);
     }
-    animateParticles();
+    spawnStar();
+
+    function animate() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      ctx.fillStyle = "rgba(255,255,255,0.7)";
+      particles.forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+        p.x += p.dx; p.y += p.dy;
+        if(p.x<0||p.x>canvas.width) p.dx*=-1;
+        if(p.y<0||p.y>canvas.height) p.dy*=-1;
+      });
+
+      stars.forEach((s,i)=>{
+        ctx.strokeStyle="rgba(255,255,255,0.8)";
+        ctx.lineWidth=2;
+        ctx.beginPath();
+        ctx.moveTo(s.x,s.y);
+        ctx.lineTo(s.x - s.dx*s.len, s.y - s.dy*s.len);
+        ctx.stroke();
+
+        s.x += s.dx; s.y += s.dy;
+        if(s.x < -100 || s.x > canvas.width+100 || s.y > canvas.height+100){
+          stars.splice(i,1);
+        }
+      });
+
+      requestAnimationFrame(animate);
+    }
+    animate();
   </script>
 </body>
 </html>
