@@ -49,7 +49,7 @@ body {
 }
 
 h1 { margin:10px 0; font-size:22px; }
-p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
+p.lead { margin:10px 0 26px; color:#00ff00; font-size:14px; font-weight:600; }
 
 .btn {
   display:flex;
@@ -74,7 +74,7 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
   inset:0;
   padding:3px;
   border-radius:12px;
-  background:linear-gradient(90deg,#ff4d6d,#38bdf8,#facc15,#d946ef,#4ade80);
+  background:linear-gradient(90deg,#ff4d6d,#38bdf8,#facc15,#d946ef);
   -webkit-mask: 
     linear-gradient(#fff 0 0) content-box, 
     linear-gradient(#fff 0 0);
@@ -93,7 +93,7 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 .btn:hover { transform: translateY(-3px); }
 
 .btn.full { width: 85%; margin: 14px auto; }
-.row { width: 85%; margin: 14px auto; display:flex; gap:12px; flex-wrap:wrap; }
+.row { width: 85%; margin: 14px auto; display:flex; gap:12px; }
 .row .btn { flex:1; min-width:0; }
 
 /* Ripple effects */
@@ -117,6 +117,27 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
   transform: scale(0.2);
 }
 @keyframes ripple-wave { to { transform: scale(1.8); opacity:0; } }
+
+/* Floating hearts gently upwards */
+.heart-float {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: rgba(255,0,50,0.7);
+  transform: rotate(45deg);
+  border-radius: 2px;
+}
+.heart-float::before,
+.heart-float::after {
+  content:'';
+  position:absolute;
+  width:10px;
+  height:10px;
+  background: rgba(255,0,50,0.7);
+  border-radius:50%;
+}
+.heart-float::before { top:-5px; left:0; }
+.heart-float::after { left:-5px; top:0; }
 </style>
 </head>
 <body>
@@ -137,132 +158,150 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 </div>
 <div class="row">
   <a class="btn discord" href="https://discord.com/" target="_blank"><i class="fab fa-discord"></i>Discord</a>
-  <a class="btn platinmods" href="https://platinmods.com/" target="_blank"><i class="fas fa-gem"></i>Platinmods</a>
+  <a class="btn platinmods" href="https://chrome.google.com/" target="_blank"><i class="fab fa-chrome"></i>Platinmods</a>
 </div>
 </div>
 
 <script>
-// Ripple effect with unique styles per button
-function createRipple(x, y, color, scale, opacity){
-  const ripple = document.createElement("span");
-  ripple.classList.add("ripple");
-  ripple.style.left = (x-60)+"px";
-  ripple.style.top = (y-60)+"px";
-  ripple.style.background = color || "rgba(255,255,255,0.15)";
-  ripple.style.transform = `scale(${scale||0.2})`;
-  ripple.style.opacity = opacity||0.7;
-  document.getElementById("ripple-layer").appendChild(ripple);
-  ripple.addEventListener("animationend", ()=>ripple.remove());
-}
+// Floating hearts gently upwards
+function spawnHeart() {
+  const heart = document.createElement("div");
+  heart.classList.add("heart-float");
+  heart.style.left = Math.random() * window.innerWidth + "px";
+  heart.style.top = window.innerHeight + 10 + "px";
+  heart.style.opacity = (Math.random() * 0.5 + 0.3).toString();
+  document.body.appendChild(heart);
 
-// Button click ripple with different effects
+  let speed = Math.random() * 0.5 + 0.5;
+  let fade = Math.random() * 0.005 + 0.002;
+
+  function animateHeart() {
+    const top = parseFloat(heart.style.top);
+    let opacity = parseFloat(heart.style.opacity);
+    if (top < -20 || opacity <= 0) {
+      heart.remove();
+      return;
+    }
+    heart.style.top = (top - speed) + "px";
+    heart.style.opacity = (opacity - fade).toString();
+    requestAnimationFrame(animateHeart);
+  }
+  animateHeart();
+}
+setInterval(spawnHeart, 500);
+
+// Button ripple with repel effect
 document.querySelectorAll(".btn").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
     const rect = btn.getBoundingClientRect();
-    const x = e.clientX;
-    const y = e.clientY;
-    let color = "rgba(255,255,255,0.15)", scale=0.2, opacity=0.7;
-
-    if(btn.classList.contains("telegram")){
-      color="rgba(56,189,248,0.3)"; scale=0.3;
-    } else if(btn.classList.contains("github")){
-      color="rgba(0,0,0,0.3)"; scale=0.4;
-    } else if(btn.classList.contains("instagram")){
-      color="rgba(236,72,153,0.3)"; scale=0.25;
-    } else if(btn.classList.contains("facebook")){
-      color="rgba(59,130,246,0.3)"; scale=0.25;
-    } else if(btn.classList.contains("discord")){
-      color="rgba(114,137,218,0.3)"; scale=0.3;
-    } else if(btn.classList.contains("platinmods")){
-      color="rgba(191,90,242,0.3)"; scale=0.35;
-    }
-
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
     for(let i=0;i<3;i++){
-      setTimeout(()=>createRipple(x, y, color, scale, opacity), i*150);
+      setTimeout(()=>{
+        const ripple = document.createElement("span");
+        ripple.classList.add("ripple","outline");
+        ripple.style.left = (rect.left+x-60)+"px";
+        ripple.style.top = (rect.top+y-60)+"px";
+        ripple.style.color = getComputedStyle(btn).color;
+        document.body.appendChild(ripple);
+        ripple.addEventListener("animationend",()=>ripple.remove());
+      },i*250);
     }
-
-    setTimeout(()=>window.open(btn.href,"_blank"),450);
+    setTimeout(()=>window.open(btn.href,"_blank"),600);
   });
 });
 
-// Background ripple
+// Background ripple on clicking anywhere
 document.addEventListener("click", e=>{
   if(!e.target.closest(".btn")){
     for(let i=0;i<2;i++){
-      setTimeout(()=>createRipple(e.pageX, e.pageY), i*250);
+      setTimeout(()=>{
+        const ripple = document.createElement("span");
+        ripple.classList.add("ripple","neon");
+        ripple.style.left = (e.pageX-60)+"px";
+        ripple.style.top = (e.pageY-60)+"px";
+        document.getElementById("ripple-layer").appendChild(ripple);
+        ripple.addEventListener("animationend",()=>ripple.remove());
+      },i*300);
     }
   }
 });
 
-// Particles + colorful stars
+// Particles + colorful stars + trails
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
-let particles=[], stars=[], twinkles=[];
-function resizeCanvas(){canvas.width=window.innerWidth; canvas.height=window.innerHeight;}
-window.addEventListener("resize", resizeCanvas);
+let particles=[],stars=[],twinkles=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+window.addEventListener("resize",resizeCanvas);
 resizeCanvas();
 
 // Floating particles
-for(let i=0;i<40;i++){
+for(let i=0;i<30;i++){
   particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.3, dy:(Math.random()-0.5)*0.3});
 }
 
 // Twinkling stars
-for(let i=0;i<80;i++){
+for(let i=0;i<60;i++){
   twinkles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.5+0.5, alpha:Math.random(), da:(Math.random()*0.02)+0.005});
 }
 
 // Shooting stars with colorful trails
 function spawnStar(){
-  const side = Math.random()>0.5?"left":"right";
+  const side = Math.random()>0.5 ? "left":"right";
   stars.push({
-    x:side==="left"?-10:canvas.width+10,
-    y:Math.random()*canvas.height*0.3,
-    dx:(Math.random()*2+1)*(side==="left"?1:-1),
-    dy:Math.random()*1.5+0.5,
-    trail:[],
-    color:`hsl(${Math.random()*360},100%,70%)`,
-    trailLength: Math.floor(Math.random()*30+20)
+    x: side==="left"?-10:canvas.width+10,
+    y: Math.random()*canvas.height*0.5,
+    dx: Math.random()*2 + 1,
+    dy: Math.random()*0.5 + 0.2,
+    color: `hsl(${Math.random()*360}, 80%, 70%)`,
+    trail: []
   });
-  setTimeout(spawnStar, Math.random()*2000+1000);
+  setTimeout(spawnStar, Math.random()*3000+2000);
 }
 spawnStar();
 
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  // Particles
+  
+  // background particles
   particles.forEach(p=>{
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle="rgba(255,255,255,0.7)"; ctx.fill();
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle="rgba(255,255,255,0.7)";
+    ctx.fill();
     p.x+=p.dx; p.y+=p.dy;
     if(p.x<0||p.x>canvas.width)p.dx*=-1;
     if(p.y<0||p.y>canvas.height)p.dy*=-1;
   });
 
-  // Twinkles
+  // twinkles
   twinkles.forEach(t=>{
-    ctx.beginPath(); ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
-    ctx.fillStyle=`hsla(${Math.random()*360},100%,70%,${t.alpha})`;
+    ctx.beginPath();
+    ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${t.alpha})`;
     ctx.fill();
-    t.alpha += t.da; if(t.alpha>1||t.alpha<0) t.da*=-1;
+    t.alpha+=t.da; if(t.alpha>1||t.alpha<0)t.da*=-1;
   });
 
-  // Shooting stars
+  // shooting stars
   stars.forEach((s,i)=>{
-    s.trail.unshift({x:s.x,y:s.y,life:1});
-    if(s.trail.length>s.trailLength) s.trail.pop();
+    s.trail.unshift({x:s.x, y:s.y, life:1});
+    if(s.trail.length>20)s.trail.pop();
     s.trail.forEach(pt=>{
+      const sparkle=Math.random()*0.5+0.5;
       ctx.beginPath();
-      ctx.arc(pt.x+Math.random()*2-1, pt.y+Math.random()*2-1, 1.5, 0, Math.PI*2);
-      ctx.fillStyle=`hsla(${Math.random()*360},100%,70%,${pt.life})`;
+      ctx.arc(pt.x, pt.y, 1.5, 0, Math.PI*2);
+      ctx.fillStyle=`rgba(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${pt.life*sparkle})`;
       ctx.fill();
+      pt.life *= 0.95;
     });
-    ctx.beginPath(); ctx.arc(s.x,s.y,2.5,0,Math.PI*2);
-    ctx.fillStyle=s.color; ctx.fill();
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, 2.5, 0, Math.PI*2);
+    ctx.fillStyle = s.color;
+    ctx.fill();
     s.x+=s.dx; s.y+=s.dy;
-    if(s.x<-100||s.x>canvas.width+100||s.y>canvas.height+100){stars.splice(i,1);}
+    if(s.x<-50||s.x>canvas.width+50||s.y>canvas.height+50){stars.splice(i,1);}
   });
 
   requestAnimationFrame(animate);
@@ -270,4 +309,4 @@ function animate(){
 animate();
 </script>
 </body>
-</html>
+  </html>
