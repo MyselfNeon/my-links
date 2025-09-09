@@ -52,6 +52,7 @@
       text-align:center;
       position: relative;
       z-index: 3;
+      margin-top: 28px; /* shift all content lower by half button height */
     }
 
     .avatar {
@@ -111,14 +112,12 @@
       animation: ripple-wave 2s ease-out forwards;
     }
 
-    /* Outlined for buttons */
     .ripple.outline {
       border: 3px solid currentColor;
       opacity: 0.9;
       transform: scale(0.3);
     }
 
-    /* Neon glow for background */
     .ripple.neon {
       background: rgba(255,255,255,0.15);
       box-shadow: 0 0 18px rgba(0,200,255,0.8), 0 0 35px rgba(150,0,255,0.6);
@@ -136,10 +135,12 @@
     /* Heartbeat pulse (center) */
     .heart {
       position: fixed;
-      top: 50%; left: 50%;
-      width: 80px; height: 80px;
+      top: calc(50% + 28px); /* shifted down */
+      left: 50%;
+      width: 140px; height: 140px; /* bigger size */
       transform: translate(-50%,-50%) rotate(-45deg) scale(0.3);
       background: radial-gradient(circle at 30% 30%, #ff4d6d, #ff1a4d);
+      box-shadow: 0 0 35px #ff1a4d, 0 0 70px #ff4d6d; /* neon glow */
       animation: heartbeat 8s infinite;
       opacity: 0;
       z-index: 1;
@@ -148,12 +149,12 @@
     .heart::after {
       content: "";
       position: absolute;
-      width: 80px; height: 80px;
+      width: 140px; height: 140px;
       border-radius: 50%;
       background: inherit;
     }
-    .heart::before { top: -40px; left: 0; }
-    .heart::after { left: 40px; top: 0; }
+    .heart::before { top: -70px; left: 0; }
+    .heart::after { left: 70px; top: 0; }
 
     @keyframes heartbeat {
       0%, 70%, 100% { transform: translate(-50%,-50%) rotate(-45deg) scale(0.3); opacity: 0; }
@@ -273,8 +274,8 @@
       stars.push({
         x: side === "left" ? -10 : canvas.width + 10,
         y: Math.random() * canvas.height * 0.3,
-        dx: side === "left" ? 4 : -4,
-        dy: 3,
+        dx: side === "left" ? 1.8 : -1.8, // slower speed
+        dy: 1.5,
         trail: []
       });
       setTimeout(spawnStar, Math.random() * 3000 + 2000);
@@ -307,11 +308,9 @@
 
       // shooting stars with sparkling trails
       stars.forEach((s,i)=>{
-        // add trail point
         s.trail.unshift({x:s.x,y:s.y,life:1});
         if(s.trail.length>25) s.trail.pop();
 
-        // draw trail as sparkles
         s.trail.forEach((pt,j)=>{
           ctx.beginPath();
           ctx.arc(pt.x,pt.y,1.5,0,Math.PI*2);
@@ -320,7 +319,6 @@
           pt.life *= 0.92;
         });
 
-        // draw head
         ctx.beginPath();
         ctx.arc(s.x,s.y,2.5,0,Math.PI*2);
         ctx.fillStyle="white";
