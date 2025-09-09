@@ -115,7 +115,8 @@ p.lead { margin:10px 0 26px; color:#94a3b8; font-size:14px; }
 </div>
 
 <div class="row">
-  <a class="btn discord" href="https://discord.com/" target="_blank"><i class="fab fa-discord"></i>Discord | Platinmods</a>
+  <a class="btn discord" href="https://discord.com/" target="_blank"><i class="fab fa-discord"></i>Discord</a>
+  <a class="btn platinmods" href="https://platinmods.com/" target="_blank"><i class="fas fa-star"></i>Platinmods</a>
 </div>
 
 </div>
@@ -179,7 +180,7 @@ for(let i=0;i<30;i++){
 }
 
 // Twinkling stars
-for(let i=0;i<100;i++){
+for(let i=0;i<120;i++){
   twinkles.push({
     x:Math.random()*canvas.width,
     y:Math.random()*canvas.height,
@@ -190,18 +191,18 @@ for(let i=0;i<100;i++){
   });
 }
 
-// Shooting stars
+// Shooting stars with random speeds and colors
 function spawnStar(){
   const side=Math.random()>0.5?"left":"right";
   stars.push({
     x:side==="left"?-10:canvas.width+10,
     y:Math.random()*canvas.height*0.3,
-    dx:Math.random()*3+1.5,
+    dx:Math.random()*3+1,
     dy:Math.random()*1.5+0.5,
     trail:[],
     color:`hsl(${Math.random()*360}, 80%, 70%)`
   });
-  setTimeout(spawnStar, Math.random()*2000+1000);
+  setTimeout(spawnStar, Math.random()*1500+1000);
 }
 spawnStar();
 
