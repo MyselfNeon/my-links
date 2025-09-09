@@ -122,7 +122,7 @@ p.lead { margin:10px 0 26px; color:#00ff00; font-size:14px; }
 .heart-float {
   position: fixed;
   bottom: 0;
-  color: rgba(255,0,0,0.6);
+  color: rgba(255,0,0,0.7);
   pointer-events: none;
   font-size: 16px;
   user-select: none;
@@ -195,7 +195,7 @@ document.addEventListener("click", e=>{
 // Particles + colorful stars
 const canvas=document.getElementById("particles");
 const ctx=canvas.getContext("2d");
-let particles=[],stars=[],twinkles=[];
+let particles=[],stars=[],twinkles=[],fireworks=[];
 function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
 window.addEventListener("resize",resizeCanvas);
 resizeCanvas();
@@ -210,11 +210,10 @@ for(let i=0;i<60;i++){
   twinkles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,alpha:Math.random(),da:(Math.random()*0.02)+0.005});
 }
 
-// Shooting stars (some colored)
+// Shooting stars
 function spawnStar(){
-  const side=Math.random()>0.5?"left":"right";
   stars.push({
-    x:side==="left"?-10:canvas.width+10,
+    x:Math.random()>0.5?-10:canvas.width+10,
     y:Math.random()*canvas.height*0.3,
     dx: 1 + Math.random()*2,
     dy: 0.5 + Math.random()*1,
@@ -225,8 +224,28 @@ function spawnStar(){
 }
 spawnStar();
 
+// Fireworks
+function spawnFirework(){
+  const x = Math.random()*canvas.width*0.8 + canvas.width*0.1;
+  const y = Math.random()*canvas.height*0.3 + 50;
+  const color = `hsl(${Math.random()*360},90%,60%)`;
+  for(let i=0;i<25;i++){
+    const angle = (Math.PI*2*i)/25;
+    fireworks.push({
+      x,y,
+      dx: Math.cos(angle)*2*(0.5+Math.random()),
+      dy: Math.sin(angle)*2*(0.5+Math.random()),
+      life: 60,
+      color
+    });
+  }
+  setTimeout(spawnFirework, 5000 + Math.random()*3000);
+}
+spawnFirework();
+
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
+  // particles
   particles.forEach(p=>{
     ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
     ctx.fillStyle="rgba(255,255,255,0.7)";
@@ -235,20 +254,21 @@ function animate(){
     if(p.x<0||p.x>canvas.width)p.dx*=-1;
     if(p.y<0||p.y>canvas.height)p.dy*=-1;
   });
+  // twinkles
   twinkles.forEach(t=>{
     ctx.beginPath(); ctx.arc(t.x,t.y,t.r,0,Math.PI*2);
     ctx.fillStyle=`rgba(255,255,255,${t.alpha})`;
     ctx.fill();
     t.alpha+=t.da; if(t.alpha>1||t.alpha<0)t.da*=-1;
   });
-
+  // stars
   stars.forEach((s,i)=>{
-    s.trail.unshift({x:s.x,y:s.y,life:1});
-    if(s.trail.length>25)s.trail.pop();
+    s.trail.unshift({x:s.x,y:s.y});
+    if(s.trail.length>20)s.trail.pop();
     s.trail.forEach(pt=>{
       ctx.beginPath();
-      ctx.arc(pt.x+Math.random()*2-1, pt.y+Math.random()*2-1, 1.5, 0, Math.PI*2);
-      ctx.fillStyle=`${s.color}`;
+      ctx.arc(pt.x,pt.y,1.5,0,Math.PI*2);
+      ctx.fillStyle=s.color;
       ctx.fill();
     });
     ctx.beginPath();
@@ -258,24 +278,32 @@ function animate(){
     s.x+=s.dx; s.y+=s.dy;
     if(s.x<-100||s.x>canvas.width+100||s.y>canvas.height+100){stars.splice(i,1);}
   });
-
+  // fireworks
+  fireworks.forEach((f,i)=>{
+    ctx.beginPath();
+    ctx.arc(f.x,f.y,2.5,0,Math.PI*2);
+    ctx.fillStyle=f.color;
+    ctx.fill();
+    f.x+=f.dx; f.y+=f.dy;
+    f.dy+=0.03; f.life--;
+    if(f.life<=0)fireworks.splice(i,1);
+  });
   requestAnimationFrame(animate);
 }
 animate();
 
-// Floating hearts
+// Floating hearts (slower, fewer)
 function spawnHeart() {
   const heart = document.createElement("div");
   heart.classList.add("heart-float");
   heart.innerHTML = "❤️";
   heart.style.left = Math.random()*window.innerWidth + "px";
   heart.style.bottom = "-20px";
-  heart.style.opacity = (0.5 + Math.random()*0.5).toString();
-  heart.style.fontSize = (12 + Math.random()*12) + "px";
+  heart.style.fontSize = (14 + Math.random()*12) + "px";
 
   document.body.appendChild(heart);
 
-  const duration = 3000; // 3 sec
+  const duration = 4000; // 4 sec slower
   const start = performance.now();
   function animateHeart(time){
     const elapsed = time - start;
@@ -288,8 +316,8 @@ function spawnHeart() {
   requestAnimationFrame(animateHeart);
 }
 
-// Spawn multiple hearts
-setInterval(()=>{ for(let i=0;i<5;i++) spawnHeart(); }, 800);
+// Spawn fewer hearts
+setInterval(()=>{ for(let i=0;i<2;i++) spawnHeart(); }, 1500);
 </script>
 </body>
   </html>
