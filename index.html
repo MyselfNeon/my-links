@@ -210,19 +210,60 @@ let fireworkCount = 0; // track spawns
 function spawnFirework(){
   fireworkCount++;
 
-  // Normal: 2–3 bursts | Every 5th time: 5–6 bursts
   let bursts;
-  if (fireworkCount % 5 === 0) {
-    bursts = Math.floor(Math.random() * 2) + 5; // 5–6 bursts (super-burst)
-  } else {
-    bursts = Math.floor(Math.random() * 2) + 2; // 2–3 bursts
+  let fixedPositions = null; // for mega finale
+
+  if (fireworkCount % 15 === 0) 
+    bursts = 5;
+    fixedPositions = [
+      {x: 0, y: 0},                        
+      {x: canvas.width, y: 0},             
+      {x: 0, y: canvas.height * 0.6},      
+      {x: canvas.width, y: canvas.height * 0.6},
+      {x: canvas.width/2, y: canvas.height * 0.3}
+    ];
+  }
+  else if (fireworkCount % 5 === 0) {
+    bursts = Math.floor(Math.random() * 2) + 5; 
+  } 
+  else {
+    if (Math.random() < 0.25) {
+      bursts = Math.floor(Math.random() * 2) + 2; 
+    } else {
+      bursts = 1;
+    }
   }
 
-  const colors = ["#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e"];
+  const colors = [
+    "#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e",
+    "#ff7f50","#00ced1","#ff1493","#7fff00","#ffa500",
+    "#9400d3","#00ff7f","#1e90ff"
+  ];
+
   for (let b = 0; b < bursts; b++) {
-    const x = Math.random() * canvas.width;
-    const y = Math.random() * canvas.height * 0.6;
-    const count = 40 + Math.floor(Math.random() * 30); // 40–70 particles
+    let x, y;
+
+    if (fixedPositions) {
+      x = fixedPositions[b].x;
+      y = fixedPositions[b].y;
+    } else {
+      x = Math.random() * canvas.width;
+      y = Math.random() * canvas.height * 0.6;
+    }
+
+    let count, radius;
+    if (fireworkCount % 15 === 0) {
+      count = 200 + Math.floor(Math.random() * 100); // 200–300 particles
+      radius = 4;
+    }
+    else if (fireworkCount % 5 === 0) {
+      count = 120 + Math.floor(Math.random() * 60);  // 120–180
+      radius = 3;
+    }
+    else {
+      count = 60 + Math.floor(Math.random() * 40);   // 60–100
+      radius = 2;
+    }
 
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * 2 * Math.PI;
@@ -231,15 +272,15 @@ function spawnFirework(){
         x, y,
         dx: Math.cos(angle) * speed,
         dy: Math.sin(angle) * speed,
-        r: 2,
+        r: radius,
         color: colors[Math.floor(Math.random() * colors.length)],
         life: 1
       });
     }
   }
 
-  // cooldown: 3–6 seconds
-  setTimeout(spawnFirework, 3000 + Math.random() * 3000);
+  // cooldown 3–5 seconds
+  setTimeout(spawnFirework, 3000 + Math.random() * 2000);
 }
 spawnFirework();
 
