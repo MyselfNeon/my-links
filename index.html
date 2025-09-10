@@ -188,6 +188,7 @@ function drawStar(ctx,x,y,r,color){
 }
 function spawnShootingStar(){
   const colors=["#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e"];
+  const count = Math.floor(Math.random() * 2) + 2; // 2 or 3 stars per spawn
   const color=colors[Math.floor(Math.random()*colors.length)];
   shootingStars.push({
     x:Math.random()*canvas.width*0.7,
@@ -198,7 +199,7 @@ function spawnShootingStar(){
     color:color,
     trail:[]
   });
-  setTimeout(spawnShootingStar,1000+Math.random()*2000);
+  setTimeout(spawnShootingStar,2000+Math.random()*3000);
 }
 spawnShootingStar();
 
