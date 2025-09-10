@@ -251,21 +251,22 @@ function spawnFirework(){
 }
 spawnFirework();
 
-// ================== Rain ==================
-let rainDrops = [];
-function spawnRain(){
-  for(let i=0; i<2; i++){ // slow sparse rain
-    rainDrops.push({
-      x: Math.random() * canvas.width,
+// ================== Snow ==================
+let snowflakes=[];
+function spawnSnow(){
+  for(let i=0;i<3;i++){ // flakes per spawn
+    snowflakes.push({
+      x: Math.random()*canvas.width,
       y: -10,
-      length: Math.random() * 15 + 10,
-      speed: Math.random() * 1 + 0.5,
-      alpha: Math.random() * 0.4 + 0.6
+      size: Math.random()*6+2,
+      dx: (Math.random()-0.5)*0.5,
+      dy: Math.random()*1+0.2,
+      alpha: Math.random()*0.5+0.3
     });
   }
-  setTimeout(spawnRain, 100);
+  setTimeout(spawnSnow,200);
 }
-spawnRain();
+spawnSnow();
 
 // ================== Animation ==================
 function animate(){
@@ -315,19 +316,16 @@ function animate(){
     if(f.life<=0) fireworks.splice(i,1);
   });
 
-  // rain animation
-  rainDrops.forEach((drop, i) => {
+  // snowflakes
+  snowflakes.forEach((flake,i)=>{
     ctx.beginPath();
-    ctx.moveTo(drop.x, drop.y);
-    ctx.lineTo(drop.x, drop.y + drop.length);
-    ctx.strokeStyle = `rgba(0,255,0,${drop.alpha})`;
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    drop.y += drop.speed;
-    drop.alpha -= 0.0005;
-    if(drop.y > canvas.height || drop.alpha <= 0){
-      rainDrops.splice(i, 1);
-    }
+    ctx.arc(flake.x,flake.y,flake.size,0,Math.PI*2);
+    ctx.fillStyle=`rgba(236,73,163,${flake.alpha})`;
+    ctx.fill();
+    flake.x+=flake.dx;
+    flake.y+=flake.dy;
+    flake.alpha-=0.0001;
+    if(flake.y>canvas.height || flake.alpha<=0) snowflakes.splice(i,1);
   });
 
   requestAnimationFrame(animate);
