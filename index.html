@@ -254,16 +254,14 @@ spawnFirework();
 // ================== Snow ==================
 let snowflakes=[];
 function spawnSnow(){
-  const now = Date.now();
-  for(let i=0;i<3;i++){
+  for(let i=0;i<2;i++){ // Reduced from 3 to 2 for cleaner look
     snowflakes.push({
       x: Math.random()*canvas.width,
       y: -10,
       size: Math.random()*6+2,
       dx: (Math.random()-0.5)*0.5,
       dy: Math.random()*1+0.2,
-      alpha: Math.random()*0.5+0.3,
-      spawnTime: now
+      alpha: Math.random()*0.5+0.3
     });
   }
   setTimeout(spawnSnow,200);
@@ -318,26 +316,16 @@ function animate(){
     if(f.life<=0) fireworks.splice(i,1);
   });
 
-  // snowflakes with fade effect near Discord button
-  const discordButton = document.querySelector(".btn.discord");
-  const fadeY = discordButton.getBoundingClientRect().top; // y-level to start fading
-
+  // snowflakes
   snowflakes.forEach((flake,i)=>{
     ctx.beginPath();
     ctx.arc(flake.x,flake.y,flake.size,0,Math.PI*2);
-    
-    // fade if near Discord button
-    if(flake.y >= fadeY){
-      flake.alpha -= 0.02; // fade faster
-    }
-    
-    ctx.fillStyle=`rgba(236,73,163,${Math.max(flake.alpha,0)})`;
+    ctx.fillStyle=`rgba(236,73,163,${flake.alpha})`;
     ctx.fill();
-
-    flake.x += flake.dx;
-    flake.y += flake.dy;
-
-    if(flake.y > canvas.height || flake.alpha <= 0) snowflakes.splice(i,1);
+    flake.x+=flake.dx;
+    flake.y+=flake.dy;
+    flake.alpha-=0.0001;
+    if(flake.y>canvas.height || flake.alpha<=0) snowflakes.splice(i,1);
   });
 
   requestAnimationFrame(animate);
