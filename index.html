@@ -188,15 +188,13 @@ function drawStar(ctx,x,y,r,color){
 }
 function spawnShootingStar(){
   const colors=["#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e"];
-  const count = Math.floor(Math.random() * 2) + 2; // 2 or 3 stars per spawn
-  const color=colors[Math.floor(Math.random()*colors.length)];
   shootingStars.push({
     x:Math.random()*canvas.width*0.7,
     y:Math.random()*canvas.height*0.3,
     dx:2+Math.random()*1,
     dy:1+Math.random()*1,
     r:6,
-    color:color,
+    color:colors[Math.floor(Math.random()*colors.length)],
     trail:[]
   });
   setTimeout(spawnShootingStar,2000+Math.random()*3000);
@@ -253,6 +251,22 @@ function spawnFirework(){
 }
 spawnFirework();
 
+// ================== Rain ==================
+let rainDrops = [];
+function spawnRain(){
+  for(let i=0; i<2; i++){ // slow sparse rain
+    rainDrops.push({
+      x: Math.random() * canvas.width,
+      y: -10,
+      length: Math.random() * 15 + 10,
+      speed: Math.random() * 1 + 0.5,
+      alpha: Math.random() * 0.3 + 0.1
+    });
+  }
+  setTimeout(spawnRain, 100);
+}
+spawnRain();
+
 // ================== Animation ==================
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -283,9 +297,7 @@ function animate(){
   shootingStars.forEach((s,i)=>{
     s.trail.unshift({x:s.x,y:s.y,life:1});
     if(s.trail.length>20)s.trail.pop();
-    // draw star head
     drawStar(ctx,s.x,s.y,s.r,s.color);
-    // draw trail
     s.trail.forEach((pt,ti)=>{
       drawStar(ctx,pt.x,pt.y,s.r*(0.6-ti/25),s.color);
       pt.life-=0.05;
@@ -301,6 +313,21 @@ function animate(){
     f.x+=f.dx; f.y+=f.dy;
     f.life-=0.02;
     if(f.life<=0) fireworks.splice(i,1);
+  });
+
+  // rain animation
+  rainDrops.forEach((drop, i) => {
+    ctx.beginPath();
+    ctx.moveTo(drop.x, drop.y);
+    ctx.lineTo(drop.x, drop.y + drop.length);
+    ctx.strokeStyle = `rgba(173,216,230,${drop.alpha})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    drop.y += drop.speed;
+    drop.alpha -= 0.0005;
+    if(drop.y > canvas.height || drop.alpha <= 0){
+      rainDrops.splice(i, 1);
+    }
   });
 
   requestAnimationFrame(animate);
@@ -350,4 +377,4 @@ document.addEventListener("click", e=>{
 });
 </script>
 </body>
-</html>
+  </html>
