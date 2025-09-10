@@ -254,18 +254,20 @@ spawnFirework();
 // ================== Snow ==================
 let snowflakes=[];
 function spawnSnow(){
-  for(let i=0;i<2;i++){ // Reduced from 3 to 2 for cleaner look
+  for(let i=0;i<2;i++){ // clean spawn
+    let alpha = Math.random()*0.5+0.3; // original range 0.3–0.8
+    if(alpha > 0.6) alpha = 0.6;        // cap brightest snowflakes
     snowflakes.push({
       x: Math.random()*canvas.width,
       y: -10,
       size: Math.random()*6+2,
       dx: (Math.random()-0.5)*0.5,
       dy: Math.random()*1+0.2,
-      alpha: Math.random()*0.5+0.3
+      alpha: alpha
     });
   }
   setTimeout(spawnSnow,200);
-}
+  }
 spawnSnow();
 
 // ================== Animation ==================
