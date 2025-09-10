@@ -205,25 +205,41 @@ spawnShootingStar();
 
 // ================== Fireworks ==================
 let fireworks=[];
+let fireworkCount = 0; // track spawns
+
 function spawnFirework(){
-  const x=Math.random()*canvas.width;
-  const y=Math.random()*canvas.height*0.6;
-  const bursts = Math.floor(Math.random() * 2) + 2; // 2 or 3 bursts at once
-  const count=50;
-  const colors=["#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e"];
-  for(let i=0;i<count;i++){
-    const angle=Math.random()*2*Math.PI;
-    const speed=Math.random()*2+1;
-    fireworks.push({
-      x,y,
-      dx:Math.cos(angle)*speed,
-      dy:Math.sin(angle)*speed,
-      r:2,
-      color:colors[Math.floor(Math.random()*colors.length)],
-      life:1
-    });
+  fireworkCount++;
+
+  // Normal: 2–3 bursts | Every 5th time: 5–6 bursts
+  let bursts;
+  if (fireworkCount % 5 === 0) {
+    bursts = Math.floor(Math.random() * 2) + 5; // 5–6 bursts (super-burst)
+  } else {
+    bursts = Math.floor(Math.random() * 2) + 2; // 2–3 bursts
   }
-  setTimeout(spawnFirework,2000+Math.random()*3000);
+
+  const colors = ["#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e"];
+  for (let b = 0; b < bursts; b++) {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height * 0.6;
+    const count = 40 + Math.floor(Math.random() * 30); // 40–70 particles
+
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * 2 * Math.PI;
+      const speed = Math.random() * 2 + 1;
+      fireworks.push({
+        x, y,
+        dx: Math.cos(angle) * speed,
+        dy: Math.sin(angle) * speed,
+        r: 2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        life: 1
+      });
+    }
+  }
+
+  // cooldown: 3–6 seconds
+  setTimeout(spawnFirework, 3000 + Math.random() * 3000);
 }
 spawnFirework();
 
