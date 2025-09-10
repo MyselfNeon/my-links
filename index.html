@@ -208,6 +208,7 @@ let fireworks=[];
 function spawnFirework(){
   const x=Math.random()*canvas.width;
   const y=Math.random()*canvas.height*0.6;
+  const bursts = Math.floor(Math.random() * 2) + 2; // 2 or 3 bursts at once
   const count=50;
   const colors=["#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e"];
   for(let i=0;i<count;i++){
@@ -222,7 +223,7 @@ function spawnFirework(){
       life:1
     });
   }
-  setTimeout(spawnFirework,4000+Math.random()*4000);
+  setTimeout(spawnFirework,2000+Math.random()*3000);
 }
 spawnFirework();
 
