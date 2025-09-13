@@ -1,165 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyselfNeon</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta charset="utf-8">
+<title>Confetti Birthday</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-body {
-  margin: 0;
-  font-family: 'Times New Roman', serif;
-  background: linear-gradient(135deg,#0f172a,#1e293b);
-  color: #f8fafc;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 60px 16px;
-  min-height: 100vh;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-  position: relative;
-}
-#particles { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
-.container { width:100%; max-width:420px; text-align:center; position: relative; z-index:3; margin-top: 28px; }
-.avatar {
-  width:120px; height:120px; border-radius:50%; margin:0 auto 22px;
-  border:4px solid #38bdf8; box-shadow:0 6px 22px rgba(56,189,248,0.18); object-fit:cover; display:block;
-}
-h1 { margin:10px 0; font-size:22px; }
-p.lead { margin:10px 0 14px; color:#00ff66; font-size:14px; font-weight:600; }
-p.extra { font-size: 13px; color: #f1f5f9; margin: 0 0 22px; line-height: 1.5; }
-.btn {
-  display:flex; align-items:center; justify-content:center; gap:10px; height: 50px;
-  text-decoration:none; color:#fff; font-weight:700; font-size:14px; border-radius: 12px;
-  border: 3px solid transparent; position: relative; overflow: hidden; z-index: 0;
-  box-shadow: 0 6px 18px rgba(2,6,23,0.45);
-}
-.btn::before {
-  content:''; position:absolute; inset:0; padding:3px; border-radius:12px;
-  background:linear-gradient(90deg,#ff4d6d,#38bdf8,#facc15,#d946ef);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: destination-out; mask-composite: exclude; z-index:-1;
-  animation: borderShift 5s linear infinite;
-}
-@keyframes borderShift { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
-.btn i { font-size:19px; margin-top:2px; }
-.btn:hover { transform: translateY(-3px); }
-.btn.full { width: 80%; margin: 10px auto; }
-.row { width: 82%; margin: 6px auto; display:flex; gap:10px; }
-.row .btn { flex:1; min-width:0; }
-.scroll-down { margin-top: 20px; font-size: 28px; color: #38bdf8; cursor: pointer; animation: bounce 1.5s infinite; }
-@keyframes bounce { 0%,20%,50%,80%,100% { transform: translateY(0); } 40% { transform: translateY(8px); } 60% { transform: translateY(4px); } }
-.section-title { margin-top: 28px; margin-bottom: 6px; font-size: 20px; font-weight: bold; color: #facc15; text-align: center; }
-.about-box {
-  background: rgba(30,41,59,0.6);
-  border: 2px solid #38bdf8;
-  border-radius: 16px;
-  padding: 20px;
-  margin: 24px auto;
-  max-width: 720px;
-  text-align: left;
-  line-height: 1.6;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.5);
-}
-.about-box h3 { color: #facc15; margin-top: 16px; font-size: 18px; }
-.about-box .intro { font-size: 15px; margin-bottom: 12px; }
-.about-box .highlight { color: #38bdf8; font-weight: bold; }
+  body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#0b1220;color:#fff;font-family:sans-serif}
+  .wrap{text-align:center;padding:36px;border-radius:12px;background:linear-gradient(180deg,#071428,#0b2540);width:min(680px,92vw)}
+  h1{margin:0 0 12px 0;font-size:2.2rem}
+  p{opacity:0.9}
+  button{margin-top:18px;padding:12px 18px;border-radius:10px;border:none;background:#ffd166;color:#061528;font-weight:700;cursor:pointer}
+  canvas{position:fixed;left:0;top:0;pointer-events:none}
 </style>
 </head>
 <body>
-<canvas id="particles"></canvas>
-
-<div class="container">
-  <img class="avatar" src="https://files.catbox.moe/opf0f0.jpg" alt="Neon avatar">
-  <h1>MyselfNeon</h1>
-  <p class="lead">🚀 Dev | 📚 Student</p>
-  <p class="extra">💡 Exploring tech, creating bots, automation scripts, and small tools that make everyday tasks easier. Always learning, always experimenting.</p>
-
-  <div class="scroll-down" onclick="document.getElementById('links').scrollIntoView({behavior: 'smooth'})">
-    <i class="fas fa-angle-down"></i>
+  <canvas id="c"></canvas>
+  <div class="wrap">
+    <h1 id="title">Happy Birthday, <span contenteditable id="who">Friend</span>! 🥳</h1>
+    <p>Edit the name above, then click the cake to celebrate.</p>
+    <button id="go">🎂 Celebrate!</button>
+    <div id="msg" style="margin-top:16px;opacity:0.95"></div>
   </div>
-</div>
-
-<h2 id="links" class="section-title">🔗 My Links</h2>
-<div class="container">
-  <a class="btn telegram full" href="https://t.me/MyselfNeon" target="_blank"><i class="fab fa-telegram-plane"></i>Telegram</a>
-  <a class="btn github full" href="https://github.com/MyselfNeon" target="_blank"><i class="fab fa-github"></i>GitHub</a>
-  <div class="row">
-    <a class="btn instagram" href="https://instagram.com/neon.an_" target="_blank"><i class="fab fa-instagram"></i>Instagram</a>
-    <a class="btn facebook" href="https://m.facebook.com/anurag.nandan.370/" target="_blank"><i class="fab fa-facebook-f"></i>Facebook</a>
-  </div>
-  <div class="row">
-    <a class="btn discord" href="https://discord.com/users/963775868184969259" target="_blank"><i class="fab fa-discord"></i>Discord</a>
-    <a class="btn platinmods" href="https://platinmods.com/members/neon-an.3695277/" target="_blank"><i class="fab fa-chrome"></i>Platinmods</a>
-  </div>
-</div>
-
-<h2 id="about" class="section-title">🌟 NeonAn / MyselfNeon</h2>
-<div class="about-box">
-  <p class="intro">
-    Passionate part-time <span class="highlight">modder</span> & <span class="highlight">coder</span> who turns ideas into tools.  
-    I build <span class="highlight">web apps, bots, and automation scripts</span> that solve real problems — not just for fun, but with impact.
-  </p>
-
-  <h3>💻 What I Do</h3>
-  <p class="intro">🤖 Develop <b>Telegram bots</b>: file rename tools, auto-forwarding systems, session generators, etc.</p>
-  <p class="intro">🐍 Work with <b>Python & scripting</b> to automate workflows and reduce repetitive tasks.</p>
-  <p class="intro">🛠️ Create <b>utilities</b> that help communities & teams be more efficient.</p>
-
-  <h3>🔥 What Drives Me</h3>
-  <p class="intro">I love taking problems and turning them into something programmable.</p>
-  <p class="intro">Always curious about <b>new tech, cleaner code, better user experiences</b>.</p>
-  <p class="intro"><b>Collaboration, learning, and iteration</b> are central: every bot/script is a chance to improve.</p>
-
-  <h3>📌 Pinned Projects</h3>
-  <p class="intro"><b>Forward Bot</b> — Auto-forward messages with logging & progress tracking.</p>
-  <p class="intro"><b>SessionGen</b> — Generate Telegram sessions securely with one click.</p>
-  <p class="intro"><b>My Links</b> — A clean personal webpage with animations, effects, and neon vibes.</p>
-</div>
 
 <script>
-// === Canvas Setup ===
-const canvas = document.getElementById("particles"), ctx = canvas.getContext("2d");
-function resizeCanvas(){ canvas.width = innerWidth; canvas.height = innerHeight; }
-addEventListener("resize", resizeCanvas);
-resizeCanvas();
+// minimal confetti (no libs)
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W = canvas.width = innerWidth;
+let H = canvas.height = innerHeight;
+window.addEventListener('resize', ()=>{W=canvas.width=innerWidth;H=canvas.height=innerHeight});
 
-// === Particles ===
-let particles = [];
-for(let i=0;i<30;i++){ particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.3, dy:(Math.random()-0.5)*0.3}); }
-
-// === Twinkles ===
-let twinkles = [];
-for(let i=0;i<60;i++){ twinkles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.5+0.5, alpha:Math.random(), da:(Math.random()*0.02)+0.005}); }
-
-// === Glitter ===
-let glitters = [];
-function spawnGlitter(){ glitters.push({x:Math.random()*canvas.width, y:-10, r:Math.random()*2+1, dy:Math.random()*0.3+0.1, alpha:1}); setTimeout(spawnGlitter,200);}
-spawnGlitter();
-
-// === Shooting Stars ===
-let shootingStars = [];
-function drawStar(ctx,x,y,r,color){ ctx.save(); ctx.beginPath(); ctx.translate(x,y); ctx.moveTo(0,-r); for(let i=0;i<5;i++){ctx.rotate(Math.PI/5); ctx.lineTo(0,-r*0.5); ctx.rotate(Math.PI/5); ctx.lineTo(0,-r);} ctx.fillStyle=color; ctx.shadowBlur=10; ctx.shadowColor=color; ctx.fill(); ctx.restore();}
-function spawnShootingStar(){ const colors=["#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e"]; shootingStars.push({x:Math.random()*canvas.width*0.7, y:Math.random()*canvas.height*0.3, dx:2+Math.random()*1, dy:1+Math.random()*1, r:6, color:colors[Math.floor(Math.random()*colors.length)], trail:[]}); setTimeout(spawnShootingStar,1000+Math.random()*2000);}
-spawnShootingStar();
-
-// === Snow ===
-let snowflakes = [];
-function spawnSnow(){ for(let i=0;i<2;i++){ let alpha=Math.random()*0.5+0.3; if(alpha>0.6) alpha=0.6; snowflakes.push({x:Math.random()*canvas.width, y:-10, size:Math.random()*6+2, dx:(Math.random()-0.5)*0.5, dy:(Math.random()*1+0.2), alpha});} setTimeout(spawnSnow,200);}
-spawnSnow();
-
-// === Animation Loop ===
-function animate(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle="rgba(255,255,255,0.7)"; ctx.fill(); p.x+=p.dx; p.y+=p.dy; if(p.x<0||p.x>canvas.width)p.dx*=-1; if(p.y<0||p.y>canvas.height)p.dy*=-1; });
-  twinkles.forEach(t=>{ ctx.beginPath(); ctx.arc(t.x,t.y,t.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${t.alpha})`; ctx.fill(); t.alpha+=t.da; if(t.alpha>1||t.alpha<0) t.da*=-1; });
-  glitters.forEach((g,i)=>{ ctx.beginPath(); ctx.arc(g.x,g.y,g.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${g.alpha})`; ctx.fill(); g.y+=g.dy; g.alpha-=0.002; if(g.alpha<=0) glitters.splice(i,1); });
-  shootingStars.forEach((s,i)=>{ s.trail.unshift({x:s.x,y:s.y,life:1}); if(s.trail.length>20)s.trail.pop(); drawStar(ctx,s.x,s.y,s.r,s.color); s.trail.forEach((pt,ti)=>{ drawStar(ctx,pt.x,pt.y,s.r*(0.6-ti/25),s.color); pt.life-=0.05; }); s.x+=s.dx; s.y+=s.dy; if(s.x>canvas.width+100||s.y>canvas.height+100) shootingStars.splice(i,1); });
-  snowflakes.forEach((flake,i)=>{ ctx.beginPath(); ctx.arc(flake.x,flake.y,flake.size,0,Math.PI*2); ctx.fillStyle=`rgba(236,73,163,${flake.alpha})`; ctx.fill(); flake.x+=flake.dx; flake.y+=flake.dy; flake.alpha-=0.0001; if(flake.y>canvas.height||flake.alpha<=0) snowflakes.splice(i,1); });
-  requestAnimationFrame(animate);
+function rand(min,max){return Math.random()*(max-min)+min}
+class Particle{
+  constructor(){ this.x=rand(0,W); this.y=rand(-50,-10); this.vx=rand(-3,3); this.vy=rand(2,6);
+    this.size=rand(6,12); this.color=`hsl(${~~rand(0,360)},80%,60%)`; this.life=0; this.ttl=rand(60,140) }
+  update(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.06; this.life++ }
+  draw(){ ctx.fillStyle=this.color; ctx.fillRect(this.x,this.y,this.size, this.size*0.6) }
 }
-animate();
+let parts=[];
+
+function emit(n=60,xRatio=0.5){
+  for(let i=0;i<n;i++){ parts.push(new Particle()) }
+  // boost from center
+  parts.forEach(p=>{ p.x += (xRatio-0.5)*200; p.vx+=rand(-2,2); p.vy+=rand(-4,1) })
+  setTimeout(()=>{ document.getElementById('msg').textContent='Enjoy your day! 🎉' }, 300)
+}
+
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=parts.length-1;i>=0;i--){
+    const p=parts[i]; p.update(); p.draw();
+    if(p.y>H+50 || p.life>p.ttl) parts.splice(i,1);
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+
+document.getElementById('go').addEventListener('click', ()=>{
+  const who = document.getElementById('who').textContent.trim() || 'Friend';
+  document.getElementById('title').innerHTML = `Happy Birthday, <strong>${who}</strong>! 🎂`
+  emit(120, Math.random())
+});
 </script>
 </body>
-  </html>
+</html>
