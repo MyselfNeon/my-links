@@ -24,7 +24,7 @@ body {
   position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;
 }
 #ripple-layer { z-index:1; }
-.container { width:100%; max-width:420px; text-align: center; position: relative; z-index:3; margin-top: 28px; }
+.container { width:100%; max-width:420px; text-align:center; position: relative; z-index:3; margin-top: 28px; }
 .avatar {
   width:120px; height:120px; border-radius:50%; margin:0 auto 22px;
   border:4px solid #38bdf8; box-shadow:0 6px 22px rgba(56,189,248,0.18); object-fit:cover; display:block;
@@ -49,9 +49,11 @@ p.extra { font-size: 13px; color: #f1f5f9; margin: 0 0 22px; line-height: 1.5; }
 .btn i { font-size:19px; margin-top:2px; }
 .btn:hover { transform: translateY(-3px); }
 .btn.full { width: 80%; margin: 10px auto; }
-.row { width: 82%; margin: 10px auto; display:flex; gap:10px; }
+.row { width: 82%; margin: 6px auto; display:flex; gap:10px; } /* reduced gap */
 .row .btn { flex:1; min-width:0; }
-.section-title { margin-top: 28px; margin-bottom: 10px; font-size: 20px; font-weight: bold; color: #facc15; text-align: center; }
+.scroll-down { margin-top: 20px; font-size: 28px; color: #38bdf8; cursor: pointer; animation: bounce 1.5s infinite; }
+@keyframes bounce { 0%,20%,50%,80%,100% { transform: translateY(0); } 40% { transform: translateY(8px); } 60% { transform: translateY(4px); } }
+.section-title { margin-top: 28px; margin-bottom: 6px; font-size: 20px; font-weight: bold; color: #facc15; text-align: center; } /* smaller gap */
 /* About Box */
 .about-box {
   background: rgba(30,41,59,0.6);
@@ -64,11 +66,28 @@ p.extra { font-size: 13px; color: #f1f5f9; margin: 0 0 22px; line-height: 1.5; }
   line-height: 1.6;
   box-shadow: 0 4px 14px rgba(0,0,0,0.5);
 }
-.about-box h3 { color: #facc15; margin-top: 16px; font-size: 18px; }
-.about-box ul { padding-left: 20px; margin: 8px 0; }
-.about-box ul li { font-size: 15px; line-height: 1.6; margin: 12px 0; }
-.about-box .intro { font-size: 15px; margin-bottom: 12px; }
-.about-box .highlight { color: #38bdf8; font-weight: bold; }
+.about-box h3 {
+  color: #facc15;
+  margin-top: 16px;
+  font-size: 18px;
+}
+.about-box ul {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+.about-box ul li {
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 12px 0;
+}
+.about-box .intro {
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+.about-box .highlight {
+  color: #38bdf8;
+  font-weight: bold;
+}
 /* Ripple */
 .ripple {
   position: absolute; border-radius: 50%; width: 120px; height: 120px; pointer-events: none;
@@ -92,6 +111,10 @@ p.extra { font-size: 13px; color: #f1f5f9; margin: 0 0 22px; line-height: 1.5; }
   <h1>MyselfNeon</h1>
   <p class="lead">🚀 Dev | 📚 Student</p>
   <p class="extra">💡 Exploring tech, creating bots, automation scripts, and small tools that make everyday tasks easier. Always learning, always experimenting.</p>
+
+  <div class="scroll-down" onclick="document.getElementById('links').scrollIntoView({behavior: 'smooth'})">
+    <i class="fas fa-angle-down"></i>
+  </div>
 </div>
 
 <h2 id="links" class="section-title">🔗 My Links</h2>
@@ -138,62 +161,67 @@ p.extra { font-size: 13px; color: #f1f5f9; margin: 0 0 22px; line-height: 1.5; }
 </div>
 
 <script>
-// === Canvas Setup & Stars ===
+// === Canvas Setup ===
 const canvas=document.getElementById("particles"),ctx=canvas.getContext("2d");
-function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
-window.addEventListener("resize",resizeCanvas); resizeCanvas();
+function resizeCanvas(){canvas.width=innerWidth;canvas.height=innerHeight;}
+addEventListener("resize",resizeCanvas);resizeCanvas();
 
-// Twinkling Stars
-let twinkles=[];
-for(let i=0;i<60;i++){ twinkles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,alpha:Math.random(),da:(Math.random()*0.02)+0.005});}
+// === Particles ===
+let particles=[];for(let i=0;i<30;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.3,dy:(Math.random()-0.5)*0.3});}
 
-// Animate Stars
-function animate(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  twinkles.forEach(t=>{
-    ctx.beginPath(); ctx.arc(t.x,t.y,t.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${t.alpha})`; ctx.fill();
-    t.alpha+=t.da; if(t.alpha>1||t.alpha<0)t.da*=-1;
-  });
-  requestAnimationFrame(animate);
-}
-animate();
+// === Twinkles ===
+let twinkles=[];for(let i=0;i<60;i++){twinkles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,alpha:Math.random(),da:(Math.random()*0.02)+0.005});}
 
-// === Ripple Effects Cleanup ===
+// === Glitter ===
+let glitters=[];function spawnGlitter(){glitters.push({x:Math.random()*canvas.width,y:-10,r:Math.random()*2+1,dy:Math.random()*0.3+0.1,alpha:1});setTimeout(spawnGlitter,200);}spawnGlitter();
+
+// === Shooting Stars (1–3s) ===
+let shootingStars=[];
+function drawStar(ctx,x,y,r,color){ctx.save();ctx.beginPath();ctx.translate(x,y);ctx.moveTo(0,-r);for(let i=0;i<5;i++){ctx.rotate(Math.PI/5);ctx.lineTo(0,-r*0.5);ctx.rotate(Math.PI/5);ctx.lineTo(0,-r);}ctx.fillStyle=color;ctx.shadowBlur=10;ctx.shadowColor=color;ctx.fill();ctx.restore();}
+function spawnShootingStar(){const colors=["#ff4d6d","#38bdf8","#facc15","#d946ef","#22c55e"];shootingStars.push({x:Math.random()*canvas.width*0.7,y:Math.random()*canvas.height*0.3,dx:2+Math.random()*1,dy:1+Math.random()*1,r:6,color:colors[Math.floor(Math.random()*colors.length)],trail:[]});setTimeout(spawnShootingStar,1000+Math.random()*2000);}spawnShootingStar();
+
+// === Snow ===
+let snowflakes=[];function spawnSnow(){for(let i=0;i<2;i++){let alpha=Math.random()*0.5+0.3;if(alpha>0.6)alpha=0.6;snowflakes.push({x:Math.random()*canvas.width,y:-10,size:Math.random()*6+2,dx:(Math.random()-0.5)*0.5,dy:Math.random()*1+0.2,alpha});}setTimeout(spawnSnow,200);}spawnSnow();
+
+// === Animation Loop ===
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);
+particles.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,0.7)";ctx.fill();p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>canvas.width)p.dx*=-1;if(p.y<0||p.y>canvas.height)p.dy*=-1;});
+twinkles.forEach(t=>{ctx.beginPath();ctx.arc(t.x,t.y,t.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${t.alpha})`;ctx.fill();t.alpha+=t.da;if(t.alpha>1||t.alpha<0)t.da*=-1;});
+glitters.forEach((g,i)=>{ctx.beginPath();ctx.arc(g.x,g.y,g.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${g.alpha})`;ctx.fill();g.y+=g.dy;g.alpha-=0.002;if(g.alpha<=0)glitters.splice(i,1);});
+shootingStars.forEach((s,i)=>{s.trail.unshift({x:s.x,y:s.y,life:1});if(s.trail.length>20)s.trail.pop();drawStar(ctx,s.x,s.y,s.r,s.color);s.trail.forEach((pt,ti)=>{drawStar(ctx,pt.x,pt.y,s.r*(0.6-ti/25),s.color);pt.life-=0.05;});s.x+=s.dx;s.y+=s.dy;if(s.x>canvas.width+100||s.y>canvas.height+100)shootingStars.splice(i,1);});
+snowflakes.forEach((flake,i)=>{ctx.beginPath();ctx.arc(flake.x,flake.y,flake.size,0,Math.PI*2);ctx.fillStyle=`rgba(236,73,163,${flake.alpha})`;ctx.fill();flake.x+=flake.dx;flake.y+=flake.dy;flake.alpha-=0.0001;if(flake.y>canvas.height||flake.alpha<=0)snowflakes.splice(i,1);});
+requestAnimationFrame(animate);}animate();
+
+// === Ripple Effects ===
 document.querySelectorAll(".btn").forEach(btn=>{
   btn.addEventListener("click", e=>{
     e.preventDefault();
     const rect=btn.getBoundingClientRect();
-    const x=e.clientX-rect.left;
-    const y=e.clientY-rect.top;
-    for(let i=0;i<3;i++){
-      setTimeout(()=>{
-        const ripple=document.createElement("span");
-        ripple.classList.add("ripple","outline");
-        ripple.style.left=(rect.left+x-60)+"px";
-        ripple.style.top=(rect.top+y-60)+"px";
-        ripple.style.color=getComputedStyle(btn).color;
-        document.body.appendChild(ripple);
-        ripple.addEventListener("animationend",()=>ripple.remove());
-      },i*250);
-    }
+    const x=e.clientX-rect.left, y=e.clientY-rect.top;
+    for(let i=0;i<3;i++){setTimeout(()=>{
+      const ripple=document.createElement("span");
+      ripple.classList.add("ripple","outline");
+      ripple.style.left=(rect.left+x-60)+"px";
+      ripple.style.top=(rect.top+y-60)+"px";
+      ripple.style.color=getComputedStyle(btn).color;
+      document.body.appendChild(ripple);
+      ripple.addEventListener("animationend",()=>ripple.remove());
+    },i*250);}
     setTimeout(()=>window.open(btn.href,"_blank"),600);
   });
 });
-
 document.addEventListener("click", e=>{
   if(!e.target.closest(".btn")){
-    for(let i=0;i<2;i++){
-      setTimeout(()=>{
-        const ripple=document.createElement("span");
-        ripple.classList.add("ripple","neon");
-        ripple.style.left=(e.pageX-60)+"px";
-        ripple.style.top=(e.pageY-60)+"px";
-        document.getElementById("ripple-layer").appendChild(ripple);
-        ripple.addEventListener("animationend",()=>ripple.remove());
-      },i*300);
-    }
+    for(let i=0;i<2;i++){setTimeout(()=>{
+      const ripple=document.createElement("span");
+      ripple.classList.add("ripple","neon");
+      ripple.style.left=(e.pageX-60)+"px";
+      ripple.style.top=(e.pageY-60)+"px";
+      document.body.appendChild(ripple);
+      ripple.addEventListener("animationend",()=>ripple.remove());
+    },i*200);}
   }
 });
 </script>
 </body>
-  </html>
+      </html>
