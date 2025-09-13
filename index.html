@@ -1,66 +1,41 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Confetti Birthday</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
-  body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#0b1220;color:#fff;font-family:sans-serif}
-  .wrap{text-align:center;padding:36px;border-radius:12px;background:linear-gradient(180deg,#071428,#0b2540);width:min(680px,92vw)}
-  h1{margin:0 0 12px 0;font-size:2.2rem}
-  p{opacity:0.9}
-  button{margin-top:18px;padding:12px 18px;border-radius:10px;border:none;background:#ffd166;color:#061528;font-weight:700;cursor:pointer}
-  canvas{position:fixed;left:0;top:0;pointer-events:none}
-</style>
+  <meta charset="utf-8" />
+  <title>Happy Birthday!</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{--bg:#0f1724;--card:#0ea5a4;--text:#041627}
+    *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif}
+    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:
+      radial-gradient(circle at 10% 20%, rgba(255,255,255,0.03), transparent 15%),
+      linear-gradient(180deg,#071428 0%, #0b2540 100%);color:white;padding:24px}
+    .card{
+      width:min(720px,96vw);
+      background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));
+      border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,0.06);
+      box-shadow:0 10px 30px rgba(2,6,23,0.6);display:flex;gap:20px;align-items:center;
+    }
+    .left{flex:1}
+    .right{width:230px;display:flex;flex-direction:column;align-items:center;gap:12px}
+    h1{font-size:2rem;margin:0 0 8px 0;letter-spacing:0.4px}
+    p{margin:0 0 12px 0;opacity:0.95}
+    .btn{background:var(--card);color:var(--text);border:none;padding:10px 16px;border-radius:10px;font-weight:600;cursor:pointer}
+    img{width:100%;border-radius:10px;object-fit:cover;box-shadow:0 6px 18px rgba(0,0,0,0.4)}
+    @media (max-width:640px){.card{flex-direction:column}.right{width:100%}}
+  </style>
 </head>
 <body>
-  <canvas id="c"></canvas>
-  <div class="wrap">
-    <h1 id="title">Happy Birthday, <span contenteditable id="who">Ishita</span>! 🥳</h1>
-    <p>Edit the name above, then click the cake to celebrate.</p>
-    <button id="go">🎂 Celebrate!</button>
-    <div id="msg" style="margin-top:16px;opacity:0.95"></div>
+  <div class="card" role="region" aria-label="Birthday Card">
+    <div class="left">
+      <h1>Happy Birthday, <span id="name">Aman</span>! 🎂</h1>
+      <p>Hope your day is full of good vibes, cake, and code. Sending you the best wishes for a fantastic year ahead!</p>
+      <button class="btn" onclick="alert('Make a wish! ✨')">Make a wish</button>
+    </div>
+    <div class="right">
+      <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder" alt="Birthday cake">
+      <small>Made with ❤️</small>
+    </div>
   </div>
-
-<script>
-// minimal confetti (no libs)
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-let W = canvas.width = innerWidth;
-let H = canvas.height = innerHeight;
-window.addEventListener('resize', ()=>{W=canvas.width=innerWidth;H=canvas.height=innerHeight});
-
-function rand(min,max){return Math.random()*(max-min)+min}
-class Particle{
-  constructor(){ this.x=rand(0,W); this.y=rand(-50,-10); this.vx=rand(-3,3); this.vy=rand(2,6);
-    this.size=rand(6,12); this.color=`hsl(${~~rand(0,360)},80%,60%)`; this.life=0; this.ttl=rand(60,140) }
-  update(){ this.x+=this.vx; this.y+=this.vy; this.vy+=0.06; this.life++ }
-  draw(){ ctx.fillStyle=this.color; ctx.fillRect(this.x,this.y,this.size, this.size*0.6) }
-}
-let parts=[];
-
-function emit(n=60,xRatio=0.5){
-  for(let i=0;i<n;i++){ parts.push(new Particle()) }
-  // boost from center
-  parts.forEach(p=>{ p.x += (xRatio-0.5)*200; p.vx+=rand(-2,2); p.vy+=rand(-4,1) })
-  setTimeout(()=>{ document.getElementById('msg').textContent='Enjoy your day! 🎉' }, 300)
-}
-
-function loop(){
-  ctx.clearRect(0,0,W,H);
-  for(let i=parts.length-1;i>=0;i--){
-    const p=parts[i]; p.update(); p.draw();
-    if(p.y>H+50 || p.life>p.ttl) parts.splice(i,1);
-  }
-  requestAnimationFrame(loop);
-}
-loop();
-
-document.getElementById('go').addEventListener('click', ()=>{
-  const who = document.getElementById('who').textContent.trim() || 'Friend';
-  document.getElementById('title').innerHTML = `Happy Birthday, <strong>${who}</strong>! 🎂`
-  emit(120, Math.random())
-});
-</script>
 </body>
 </html>
