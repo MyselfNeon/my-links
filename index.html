@@ -48,7 +48,7 @@ p.extra { font-size: 13px; color: #f1f5f9; margin: 0 0 22px; line-height: 1.5; }
 @keyframes borderShift { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
 .btn i { font-size:19px; margin-top:2px; }
 .btn:hover { transform: translateY(-3px); }
-.btn.full { width: 80%; margin: 10px auto; } /* reduced gap */
+.btn.full { width: 80%; margin: 10px auto; }
 .row { width: 82%; margin: 10px auto; display:flex; gap:10px; }
 .row .btn { flex:1; min-width:0; }
 .scroll-down { margin-top: 20px; font-size: 28px; color: #38bdf8; cursor: pointer; animation: bounce 1.5s infinite; }
@@ -76,7 +76,9 @@ p.extra { font-size: 13px; color: #f1f5f9; margin: 0 0 22px; line-height: 1.5; }
   margin: 8px 0;
 }
 .about-box ul li {
-  margin: 6px 0;
+  font-size: 15px;      /* unified with intro */
+  line-height: 1.6;     /* same rhythm */
+  margin: 12px 0;       /* same gap */
 }
 .about-box .intro {
   font-size: 15px;
@@ -222,4 +224,4 @@ document.addEventListener("click", e=>{
 });
 </script>
 </body>
-      </html>
+  </html>
